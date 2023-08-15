@@ -1,0 +1,157 @@
+#main-grid{
+    display: grid;
+    grid-template-areas: 'frame-frame sections-frame armour-frame shield-frame'
+    'frame-frame misc-frame armour-frame shield-frame'
+    'fore-frame mid-frame core-frame aft-frame';
+    grid-template-columns: 25% 25% 25% 25%;
+    grid-template-rows: auto auto auto;
+    background-color: grey;
+    width: 100%;
+    max-width: 1500px;
+    margin: auto;
+}
+#frame-frame{grid-area: frame-frame;}
+#sections-frame{grid-area: sections-frame;}
+#misc-frame{grid-area: misc-frame;}
+#armour-frame{grid-area: armour-frame;}
+#shield-frame{grid-area: shield-frame;}
+#fore-frame{grid-area: fore-frame;}
+#mid-frame{grid-area: mid-frame;}
+#core-frame{grid-area: core-frame;}
+#aft-frame{grid-area: aft-frame;}
+
+.frame{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;  
+}
+
+#main-grid>div{
+    margin: 1px;
+
+}
+
+p{
+    font-family: var(--font);
+    font-size: 16px;
+    color: black;
+    text-align: center;
+    margin: 0px;
+    padding: 0px;
+}
+
+h3{
+
+}
+label{
+
+}
+#ship-name{
+
+}
+#frame-name-dd{
+
+}
+
+#frame-card{
+    display: grid;
+    grid-template-areas: 'frame-pic frame-name frame-tier'
+    'frame-armour-label frame-armour-pattern frame-armour-pattern'
+    'frame-shield-label frame-shield-pattern frame-shield-pattern'
+    'frame-move-label frame-move-cost frame-move-actual'
+    'frame-turn-label frame-turn-rate frame-turn-actual'
+    'frame-damage-label frame-damage-limit frame-damage-actual'
+    'frame-health-label frame-health frame-health-actual'
+    'frame-upgrade-label frame-upgrade-cost frame-upgrade-cost'
+    'frame-cost-label frame-cost frame-cost'
+    'frame-sensors-label frame-sensors frame-sensors-actual'
+    'frame-signal-label frame-signal frame-signal-actual'
+    'frame-misc-label frame-misc frame-misc';
+    grid-template-columns: 35% 45% 20%;
+    grid-template-rows: auto auto auto auto auto auto auto auto auto auto auto auto;
+    background-color: white;
+    width: 95%;
+    margin: auto;
+    margin-top: 5px;;
+}
+
+#frame-card>div{
+    margin: 1px;
+    border: 2px;
+    border-style: solid;
+    border-radius: 5%;
+    padding: 2px;
+    height: auto;
+}
+
+#frame-pic{grid-area: frame-pic;}
+#frame-name{grid-area: frame-name;}
+#frame-tier{grid-area: frame-tier;}
+#frame-armour-label{grid-area: frame-armour-label;}
+#frame-armour-pattern{grid-area: frame-armour-pattern;}
+#frame-shield-label{grid-area: frame-shield-label;}
+#frame-shield-pattern{grid-area: frame-shield-pattern;}
+#frame-move-label{grid-area: frame-move-label;}
+#frame-move-cost{grid-area: frame-move-cost;}
+#frame-move-actual{grid-area: frame-move-actual;}
+#frame-turn-label{grid-area: frame-turn-label;}
+#frame-turn-rate{grid-area: frame-turn-rate;}
+#frame-turn-actual{grid-area: frame-turn-actual;}
+#frame-damage-label{grid-area: frame-damage-label;}
+#frame-damage-limit{grid-area: frame-damage-limit;}
+#frame-damage-actual{grid-area: frame-damage-actual;}
+#frame-health-label{grid-area: frame-health-label;}
+#frame-health{grid-area: frame-health;}
+#frame-health-actual{grid-area: frame-health-actual;}
+#frame-upgrade-label{grid-area: frame-upgrade-label;}
+#frame-upgrade-cost{grid-area: frame-upgrade-cost;}
+#frame-cost-label{grid-area: frame-cost-label;}
+#frame-cost{grid-area: frame-cost;}
+#frame-sensors-label{grid-area: frame-sensors-label;}
+#frame-sensors{grid-area: frame-sensors;}
+#frame-sensors-actual{grid-area: frame-sensors-actual;}
+#frame-signal-label{grid-area: frame-signal-label;}
+#frame-signal{grid-area: frame-signal;}
+#frame-signal-actual{grid-area: frame-signal-actual;}
+#frame-misc-label{grid-area: frame-misc-label;}
+#frame-misc{grid-area: frame-misc;}
+
+table{
+
+}
+
+td{
+
+}
+
+#section-warning-text{
+    color: red;
+}
+
+#ship-horizontal{
+    width: 80%
+}
+
+#ship-angle{
+    width: 99%
+}
+
+#frame-picture{
+    width: 80%;
+}
+
+
+.plus-button{
+    background-image: url( /images/plus.png );
+    background-size: 20px 20px;
+    height: 25px;  
+    width: 25px;
+}
+
+.minus-button{
+    background-image: url( /images/minus.png );
+    background-size: 20px 20px;
+    height: 25px;  
+    width: 25px;
+}

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space III ship builder</title>
+
+    <link rel="stylesheet" href="css/build.css">
+    <script src="script/build.js" defer></script>
+</head>
+
+<body>
+    <div id="main-grid">
+        <div id="frame-frame", class="frame">
+            <h3>Ship Info</h3>
+            <div>
+                <label for="ship-name">Ship name:</label>
+                <input type="text" id="ship-name" name="ship-name">
+            </div>
+            <div id="frame-card", class="card">
+                <div id="frame-pic"><img id="frame-picture" src="/images/frame.png" alt="Spaceship"></div>
+                <div id="frame-name">
+                    <select name="frame-name-dd" id="frame-name-dd">
+                        <option value="volvo">Volvo</option>
+                        <option value="saab">Saab</option>
+                        <option value="mercedes">Mercedes</option>
+                        <option value="audi">Audi</option>
+                    </select>
+                </div>
+                <div id="frame-tier"><p id="frame-tier-text"></p></div>
+                <div id="frame-armour-label"><p>Armour Pattern</p></div>
+                <div id="frame-armour-pattern"><p id="frame-armour-pattern-text"></p></div>
+                <div id="frame-shield-label"><p>Shield Pattern</p></div>
+                <div id="frame-shield-pattern"><p id="frame-shield-pattern-text"></p></div>
+                <div id="frame-move-label"><p>Move Cost</p></div>
+                <div id="frame-move-cost"><p id="frame-move-cost-text"></p></div>
+                <div id="frame-move-actual"><p id="frame-move-actual-text"></p></div>
+                <div id="frame-turn-label"><p>Turn rate</p></div>
+                <div id="frame-turn-rate"><p id="frame-turn-rate-text"></p></div>
+                <div id="frame-turn-actual"><p id="frame-turn-actual-text"></p></div>
+                <div id="frame-damage-label"><p>Damage Limit</p></div>
+                <div id="frame-damage-limit"><p id="frame-damage-limit-text"></p></div>
+                <div id="frame-damage-actual"><p id="frame-damage-actual-text"></p></div>
+                <div id="frame-health-label"><p>HT</p></div>
+                <div id="frame-health"><p id="frame-health-text"></p></div>
+                <div id="frame-health-actual"><p id="frame-health-actual-text"></p></div>
+                <div id="frame-upgrade-label"><p>Upgrade Cost</p></div>
+                <div id="frame-upgrade-cost"><p id="frame-upgrade-cost-text"></p></div>
+                <div id="frame-cost-label"><p>Frame Cost</p></div>
+                <div id="frame-cost"><p id="frame-cost-text"></p></div>
+                <div id="frame-sensors-label"><p>Sensors</p></div>
+                <div id="frame-sensors"><p id="frame-sensors-text"></p></div>
+                <div id="frame-sensors-actual"><p id="frame-sensors-actual-text"></p></div>
+                <div id="frame-signal-label"><p>Signal</p></div>
+                <div id="frame-signal"><p id="frame-signal-text"></p></div>
+                <div id="frame-signal-actual"><p id="frame-signal-actual-text"></p></div>
+                <div id="frame-misc-label"><p>Misc</p></div>
+                <div id="frame-misc"><p id="frame-misc-text"></p></div>
+            </div>
+        </div>
+        <div id="sections-frame", class="frame">
+            <h3>Ship Sections</h3>
+            <table>
+                <tr>
+                  <td>Fore Sections</td>
+                  <td id="fore-sections-number">1</td>
+                  <td><button class="plus-button"></button></td>
+                  <td><button class="minus-button"></button></td>
+                </tr>
+                <tr>
+                    <td>Mid Sections</td>
+                    <td id="mid-sections-number">1</td>
+                    <td><button class="plus-button"></button></td>
+                    <td><button class="minus-button"></button></td>
+                </tr>
+                <tr>
+                    <td>Core Sections</td>
+                    <td id="core-sections-number">1</td>
+                    <td><button class="plus-button"></button></td>
+                    <td><button class="minus-button"></button></td>
+                </tr>
+                <tr>
+                    <td>Aft Sections</td>
+                    <td id="aft-sections-number">1</td>
+                    <td><button class="plus-button"></button></td>
+                    <td><button class="minus-button"></button></td>
+                </tr>
+            </table>
+            <p id="section-warning-text">Somethings wrong</p>
+        </div>
+        <div id="misc-frame", class="frame">
+            <h3>Other Info</h3>
+            <table>
+                <tr>
+                    <td>Power</td>
+                    <td>Warp:</td>
+                    <td id="warp-number">0</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Impulse:</td>
+                    <td id="impulse-number">0</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Reactor:</td>
+                    <td id="reactor-number">0</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Battery:</td>
+                    <td id="battery-number">0</td>
+                </tr>
+                <tr>
+                    <td>Repair Points:</td>
+                    <td></td>
+                    <td id="repair-number">0</td>
+                </tr>
+                <tr>
+                    <td colspan="2">Light Weapons Capacity:</td>
+                    <td></td>
+                    <td id="wep-cap-number">0</td>
+                </tr>
+            </table>
+        </div>
+        <div id ="armour-frame", class="frame">
+            <h3>Ship Armour</h3>
+            <table>
+                <tr>
+                    <td>Total Armour:</td>
+                    <td id="armour-number">0</td>
+                </tr>
+                <tr>
+                    <td>General Armour:</td>
+                    <td id="general-armour-number">0</td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td colspan="3">Locational Armour:</td>
+                </tr>
+                <tr>
+                    <td>Fore Armour</td>
+                    <td>Mid Armour</td>
+                    <td>Aft Armour</td>
+                </tr>
+                <tr>
+                    <td id="fore-armour-number">0</td>
+                    <td id="mid-armour-number">0</td>
+                    <td id="aft-armour-number">0</td>
+                </tr>
+            </table>
+            <img id="ship-horizontal" src="images/ship_side.png" alt="Spaceship">
+        </div>
+        <div id="shield-frame", class="frame">
+            <h3>Ship Shields</h3>
+            <table>
+                <tr>
+                    <td>Total Shield:</td>
+                    <td id="shield-number">0</td>
+                </tr>
+                <tr>
+                    <td>General Shield:</td>
+                    <td id="general-shield-number">0</td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td colspan="3">Locational Shields:</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Front Shield</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Front Left Shield</td>
+                    <td id="front-shield-number">0</td>
+                    <td>Front Right Shield</td>
+                </tr>
+                <tr>
+                    <td id="front-left-shield-number">0</td>
+                    <td rowspan="2"><img id="ship-angle" src="images/ship_angle.png" alt="Spaceship"></td>
+                    <td id="front-right-shield-number">0</td>
+                </tr>
+                <tr>
+                    <td>Rear Left Shield</td>
+                    <!-- <td></td> -->
+                    <td>Rear Right Shield</td>
+                </tr>
+                <tr>
+                    <td id="rear-left-shield-number">0</td>
+                    <td>Rear Shield</td>
+                    <td id="rear-right-shield-number">0</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td id="rear-shield-number">0</td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+        <div id="fore-frame", class="frame">
+            <h3>Fore Sections</h3>
+        </div>
+        <div id="mid-frame", class="frame">
+            <h3>Mid Sections</h3>
+        </div>
+        <div id="core-frame", class="frame">
+            <h3>Core Sections</h3>
+        </div>
+        <div id="aft-frame", class="frame">
+            <h3>Aft Sections</h3>
+        </div>
+    </div>
+    
+</body>
+</html>
