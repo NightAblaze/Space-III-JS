@@ -10,6 +10,7 @@
     max-width: 1500px;
     margin: auto;
 }
+
 #frame-frame{grid-area: frame-frame;}
 #sections-frame{grid-area: sections-frame;}
 #misc-frame{grid-area: misc-frame;}
@@ -23,13 +24,13 @@
 .frame{
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;  
-}
-
-#main-grid>div{
+    justify-content: left;
+    align-items: center;
     margin: 1px;
-
+    border: 2px;
+    padding: 1% 2% 2% 2%;
+    border-style: solid;
+    border-radius: 5%;
 }
 
 p{
@@ -42,47 +43,69 @@ p{
 }
 
 h3{
-
+    margin: 0px;
+    padding: 0px;
+    color: white;
 }
+
+.title{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 5%;
+    padding-bottom: 5%;
+}
+
 label{
-
+    color: white;
+    width:30%
 }
+
 #ship-name{
-
+    margin-bottom: 5%;
+    width: 60%
 }
-#frame-name-dd{
 
+.card-selection{
+    width: 95%;
 }
 
 #frame-card{
     display: grid;
-    grid-template-areas: 'frame-pic frame-name frame-tier'
-    'frame-armour-label frame-armour-pattern frame-armour-pattern'
-    'frame-shield-label frame-shield-pattern frame-shield-pattern'
-    'frame-move-label frame-move-cost frame-move-actual'
-    'frame-turn-label frame-turn-rate frame-turn-actual'
-    'frame-damage-label frame-damage-limit frame-damage-actual'
-    'frame-health-label frame-health frame-health-actual'
-    'frame-upgrade-label frame-upgrade-cost frame-upgrade-cost'
-    'frame-cost-label frame-cost frame-cost'
-    'frame-sensors-label frame-sensors frame-sensors-actual'
-    'frame-signal-label frame-signal frame-signal-actual'
-    'frame-misc-label frame-misc frame-misc';
-    grid-template-columns: 35% 45% 20%;
+    grid-template-areas: 'frame-pic frame-name frame-name frame-tier frame-tier'
+    'frame-armour-label frame-armour-label frame-armour-pattern frame-armour-pattern frame-armour-pattern'
+    'frame-shield-label frame-shield-label frame-shield-pattern frame-shield-pattern frame-shield-pattern'
+    'frame-move-label frame-move-label frame-move-cost frame-move-cost frame-move-actual'
+    'frame-turn-label frame-turn-label frame-turn-rate frame-turn-rate frame-turn-actual'
+    'frame-damage-label frame-damage-label frame-damage-limit frame-damage-limit frame-damage-actual'
+    'frame-health-label frame-health-label frame-health frame-health frame-health-actual'
+    'frame-upgrade-label frame-upgrade-label frame-upgrade-cost frame-upgrade-cost frame-upgrade-cost'
+    'frame-cost-label frame-cost-label frame-cost frame-cost frame-cost'
+    'frame-sensors-label frame-sensors-label frame-sensors frame-sensors frame-sensors-actual'
+    'frame-signal-label frame-signal-label frame-signal frame-signal frame-signal-actual'
+    'frame-misc-label frame-misc-label frame-misc frame-misc frame-misc';
+    grid-template-columns: 15% 20% 35% 15% 15%;
     grid-template-rows: auto auto auto auto auto auto auto auto auto auto auto auto;
+}
+.card{
     background-color: white;
     width: 95%;
     margin: auto;
-    margin-top: 5px;;
+    margin-top: 5px;
+    border: 4px;
+    border-style: solid;
 }
 
-#frame-card>div{
+.card>div{
     margin: 1px;
     border: 2px;
     border-style: solid;
     border-radius: 5%;
     padding: 2px;
     height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #frame-pic{grid-area: frame-pic;}
@@ -118,40 +141,117 @@ label{
 #frame-misc{grid-area: frame-misc;}
 
 table{
-
+    margin-bottom: 5%;
+    width: 95%;
 }
 
 td{
+    color: white;
+    text-align: left;
+    padding: 2% 0%;
+}
 
+#sections-frame table{
+    width: 85%;
+}
+
+#sections-frame td{
+    text-align: center;
 }
 
 #section-warning-text{
     color: red;
+    font-weight: 700;
+}
+
+#misc-frame table{
+    width: 75%;
+}
+
+#misc-frame td{
+    
+}
+
+.detail-table td{
+    text-align: center;
+    width: 34%;
+    padding: 1% 0%;
+}
+
+#merged-cells{
+    text-align: left;
+    padding: 2% 0%;
 }
 
 #ship-horizontal{
-    width: 80%
-}
-
-#ship-angle{
-    width: 99%
-}
-
-#frame-picture{
     width: 80%;
 }
 
-
-.plus-button{
-    background-image: url( /images/plus.png );
-    background-size: 20px 20px;
-    height: 25px;  
-    width: 25px;
+#ship-angle{
+    width: 99%;
 }
 
-.minus-button{
-    background-image: url( /images/minus.png );
-    background-size: 20px 20px;
+.card-picture{
+    width: 99%;
+}
+
+.medium-button{
     height: 25px;  
     width: 25px;
+    padding: 1px;
+    background-color: white;
+    display: flex;
+    justify-content: center;
 }
+
+.small-button{
+    height: 100%;
+    width: 100%;
+    border: none;
+    padding: 1px;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+}
+
+.button-image{
+    width: 100%;
+    margin: auto;
+}
+
+#section-card{
+    display: grid;
+    grid-template-areas: 'section-pic section-name section-tier section-close'
+    'section-1-label section-1 section-1 section-1-view'
+    'section-2-label section-2 section-2 section-2-view'
+    'section-3-label section-3 section-3 section-3-view'
+    'section-4-label section-4 section-4 section-4-view'
+    'section-5-label section-5 section-5 section-5-view'
+    'section-money section-misc section-misc section-misc'
+    'section-cost section-misc section-misc section-misc';
+    grid-template-columns: 15% 45% 30% 10%;
+    grid-template-rows: auto auto auto auto auto auto auto auto ;
+}
+
+#section-pic{grid-area: section-pic;}
+#section-name{grid-area: section-name;}
+#section-tier{grid-area: section-tier;}
+#section-close{grid-area: section-close;}
+#section-1-label{grid-area: section-1-label;}
+#section-1{grid-area: section-1;}
+#section-1-view{grid-area: section-1-view;}
+#section-2-label{grid-area: section-2-label;}
+#section-2{grid-area: section-2;}
+#section-2-view{grid-area: section-2-view;}
+#section-3-label{grid-area: section-3-label;}
+#section-3{grid-area: section-3;}
+#section-3-view{grid-area: section-3-view;}
+#section-4-label{grid-area: section-4-label;}
+#section-4{grid-area: section-4;}
+#section-4-view{grid-area: section-4-view;}
+#section-5-label{grid-area: section-5-label;}
+#section-5{grid-area: section-5;}
+#section-5-view{grid-area: section-5-view;}
+#section-money{grid-area: section-money;}
+#section-cost{grid-area: section-cost;}
+#section-misc{grid-area: section-misc;}

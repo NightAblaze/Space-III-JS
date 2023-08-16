@@ -12,15 +12,15 @@
 <body>
     <div id="main-grid">
         <div id="frame-frame", class="frame">
-            <h3>Ship Info</h3>
+            <div class="title"><h3>Ship Info</h3></div>
             <div>
                 <label for="ship-name">Ship name:</label>
                 <input type="text" id="ship-name" name="ship-name">
             </div>
             <div id="frame-card", class="card">
-                <div id="frame-pic"><img id="frame-picture" src="/images/frame.png" alt="Spaceship"></div>
+                <div id="frame-pic"><img class="card-picture" src="images/frame.png" alt="Frame"></div>
                 <div id="frame-name">
-                    <select name="frame-name-dd" id="frame-name-dd">
+                    <select class="card-selection" name="frame-name-dd" id="frame-name-dd">
                         <option value="volvo">Volvo</option>
                         <option value="saab">Saab</option>
                         <option value="mercedes">Mercedes</option>
@@ -59,37 +59,45 @@
             </div>
         </div>
         <div id="sections-frame", class="frame">
-            <h3>Ship Sections</h3>
+            <div class="title"><h3>Ship Sections</h3></div>
             <table>
-                <tr>
-                  <td>Fore Sections</td>
-                  <td id="fore-sections-number">1</td>
-                  <td><button class="plus-button"></button></td>
-                  <td><button class="minus-button"></button></td>
-                </tr>
-                <tr>
-                    <td>Mid Sections</td>
-                    <td id="mid-sections-number">1</td>
-                    <td><button class="plus-button"></button></td>
-                    <td><button class="minus-button"></button></td>
-                </tr>
-                <tr>
-                    <td>Core Sections</td>
-                    <td id="core-sections-number">1</td>
-                    <td><button class="plus-button"></button></td>
-                    <td><button class="minus-button"></button></td>
-                </tr>
-                <tr>
-                    <td>Aft Sections</td>
-                    <td id="aft-sections-number">1</td>
-                    <td><button class="plus-button"></button></td>
-                    <td><button class="minus-button"></button></td>
-                </tr>
+                <colgroup>
+                    <col style="width:55%">
+                    <col style="width:25%">
+                    <col style="width:10%">
+                    <col style="width:10%">
+                </colgroup>  
+                <tbody>
+                    <tr>
+                    <td>Fore Sections</td>
+                    <td id="fore-sections-number">1</td>
+                    <td><button class="medium-button"><img class="button-image" src="images/plus.png" alt="Add"></button></td>
+                    <td><button class="medium-button"><img class="button-image" src="images/minus.png" alt="Add"></button></td>
+                    </tr>
+                    <tr>
+                        <td>Mid Sections</td>
+                        <td id="mid-sections-number">1</td>
+                        <td><button class="medium-button"><img class="button-image" src="images/plus.png" alt="Add"></button></td>
+                        <td><button class="medium-button"><img class="button-image" src="images/minus.png" alt="Add"></button></td>
+                    </tr>
+                    <tr>
+                        <td>Core Sections</td>
+                        <td id="core-sections-number">1</td>
+                        <td><button class="medium-button"><img class="button-image" src="images/plus.png" alt="Add"></button></td>
+                        <td><button class="medium-button"><img class="button-image" src="images/minus.png" alt="Add"></button></td>
+                    </tr>
+                    <tr>
+                        <td>Aft Sections</td>
+                        <td id="aft-sections-number">1</td>
+                        <td><button class="medium-button"><img class="button-image" src="images/plus.png" alt="Add"></button></td>
+                        <td><button class="medium-button"><img class="button-image" src="images/minus.png" alt="Add"></button></td>
+                    </tr>
+                </tbody>
             </table>
             <p id="section-warning-text">Somethings wrong</p>
         </div>
         <div id="misc-frame", class="frame">
-            <h3>Other Info</h3>
+            <div class="title"><h3>Other Info</h3></div>
             <table>
                 <tr>
                     <td>Power</td>
@@ -112,19 +120,19 @@
                     <td id="battery-number">0</td>
                 </tr>
                 <tr>
-                    <td>Repair Points:</td>
-                    <td></td>
+                    <td colspan="2">Repair Points:</td>
+                    <!-- <td></td> -->
                     <td id="repair-number">0</td>
                 </tr>
                 <tr>
                     <td colspan="2">Light Weapons Capacity:</td>
-                    <td></td>
+                    <!-- <td></td> -->
                     <td id="wep-cap-number">0</td>
                 </tr>
             </table>
         </div>
         <div id ="armour-frame", class="frame">
-            <h3>Ship Armour</h3>
+            <div class="title"><h3>Ship Armour</h3></div>
             <table>
                 <tr>
                     <td>Total Armour:</td>
@@ -135,9 +143,9 @@
                     <td id="general-armour-number">0</td>
                 </tr>
             </table>
-            <table>
+            <table class="detail-table">
                 <tr>
-                    <td colspan="3">Locational Armour:</td>
+                    <td id="merged-cells" colspan="3">Locational Armour:</td>
                 </tr>
                 <tr>
                     <td>Fore Armour</td>
@@ -153,7 +161,7 @@
             <img id="ship-horizontal" src="images/ship_side.png" alt="Spaceship">
         </div>
         <div id="shield-frame", class="frame">
-            <h3>Ship Shields</h3>
+            <div class="title"><h3>Ship Shields</h3></div>
             <table>
                 <tr>
                     <td>Total Shield:</td>
@@ -164,9 +172,9 @@
                     <td id="general-shield-number">0</td>
                 </tr>
             </table>
-            <table>
+            <table class="detail-table">
                 <tr>
-                    <td colspan="3">Locational Shields:</td>
+                    <td id="merged-cells" colspan="3">Locational Shields:</td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -176,9 +184,9 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td>Front Left Shield</td>
+                    <td>Front Left<br>Shield</td>
                     <td id="front-shield-number">0</td>
-                    <td>Front Right Shield</td>
+                    <td>Front Right<br>Shield</td>
                 </tr>
                 <tr>
                     <td id="front-left-shield-number">0</td>
@@ -186,9 +194,9 @@
                     <td id="front-right-shield-number">0</td>
                 </tr>
                 <tr>
-                    <td>Rear Left Shield</td>
+                    <td>Rear Left<br>Shield</td>
                     <!-- <td></td> -->
-                    <td>Rear Right Shield</td>
+                    <td>Rear Right<br>Shield</td>
                 </tr>
                 <tr>
                     <td id="rear-left-shield-number">0</td>
@@ -203,16 +211,48 @@
             </table>
         </div>
         <div id="fore-frame", class="frame">
-            <h3>Fore Sections</h3>
+            <div class="title"><h3>Fore Sections</h3></div>
         </div>
         <div id="mid-frame", class="frame">
-            <h3>Mid Sections</h3>
+            <div class="title"><h3>Mid Sections</h3></div>
         </div>
         <div id="core-frame", class="frame">
-            <h3>Core Sections</h3>
+            <div class="title"><h3>Core Sections</h3></div>
         </div>
         <div id="aft-frame", class="frame">
-            <h3>Aft Sections</h3>
+            <div class="title"><h3>Aft Sections</h3></div>
+            <!-- Will need to change id's so unique for each card in javascript version -->
+            <div id="section-card", class="card">
+                <div id="section-pic"><img class="card-picture" src="images/section_logo.png" alt="Section"></div>
+                <div id="section-name">
+                    <select class="card-selection" name="section-name-dd" id="section-name-dd">
+                        <option value="volvo">Volvo</option>
+                        <option value="saab">Saab</option>
+                        <option value="mercedes">Mercedes</option>
+                        <option value="audi">Audi</option>
+                    </select>
+                </div>
+                <div id="section-tier"><p id="section-tier-text"></p></div>
+                <div id="section-close"><button class="small-button"><img class="button-image" src="images/minus.png" alt="Close"></button></div>
+                <div id="section-1-label"><p>1</p></div>
+                <div id="section-1"><p id="section-1-text"></p></div>
+                <div id="section-1-view"><button class="small-button"><img class="button-image" src="images/magnifying_glass.jpg" alt="View"></button></div>
+                <div id="section-2-label"><p>2</p></div>
+                <div id="section-2"><p id="section-2-text"></p></div>
+                <div id="section-2-view"><button class="small-button"><img class="button-image" src="images/magnifying_glass.jpg" alt="View"></button></div>
+                <div id="section-3-label"><p>3</p></div>
+                <div id="section-3"><p id="section-3-text"></p></div>
+                <div id="section-3-view"><button class="small-button"><img class="button-image" src="images/magnifying_glass.jpg" alt="View"></button></div>
+                <div id="section-4-label"><p>4</p></div>
+                <div id="section-4"><p id="section-4-text"></p></div>
+                <div id="section-4-view"><button class="small-button"><img class="button-image" src="images/magnifying_glass.jpg" alt="View"></button></div>
+                <div id="section-5-label"><p>#</p></div>
+                <div id="section-5"><p id="section-#-text"></p></div>
+                <div id="section-5-view"><button class="small-button"><img class="button-image" src="images/magnifying_glass.jpg" alt="View"></button></div>
+                <div id="section-money"><img class="card-picture" src="images/money_bag.png" alt="Cost"></div>
+                <div id="section-cost"><p id="section-cost"></p></div>
+                <div id="section-misc"><p id="section-misc"></p></div>
+            </div>
         </div>
     </div>
     
