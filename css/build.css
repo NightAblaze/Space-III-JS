@@ -24,13 +24,13 @@
 .frame{
     display: flex;
     flex-direction: column;
-    justify-content: left;
+    justify-content: flex-start;
     align-items: center;
     margin: 1px;
     border: 2px;
     padding: 1% 2% 2% 2%;
     border-style: solid;
-    border-radius: 5%;
+    border-radius: 10px;
 }
 
 p{
@@ -90,17 +90,17 @@ label{
 .card{
     background-color: white;
     width: 95%;
-    margin: auto;
     margin-top: 5px;
     border: 4px;
     border-style: solid;
+    border-radius: 7px;
 }
 
 .card>div{
     margin: 1px;
     border: 2px;
     border-style: solid;
-    border-radius: 5%;
+    border-radius: 3px;
     padding: 2px;
     height: auto;
     display: flex;
@@ -168,9 +168,9 @@ td{
     width: 75%;
 }
 
-#misc-frame td{
+/* #misc-frame td{
     
-}
+} */
 
 .detail-table td{
     text-align: center;
@@ -219,39 +219,39 @@ td{
     margin: auto;
 }
 
-#section-card{
+.section-card{
     display: grid;
     grid-template-areas: 'section-pic section-name section-tier section-close'
-    'section-1-label section-1 section-1 section-1-view'
-    'section-2-label section-2 section-2 section-2-view'
-    'section-3-label section-3 section-3 section-3-view'
-    'section-4-label section-4 section-4 section-4-view'
-    'section-5-label section-5 section-5 section-5-view'
+    'dr-1-label dr-1 dr-1 dr-1-view'
+    'dr-2-label dr-2 dr-2 dr-2-view'
+    'dr-3-label dr-3 dr-3 dr-3-view'
+    'dr-4-label dr-4 dr-4 dr-4-view'
+    'dr-5-label dr-5 dr-5 dr-5-view'
     'section-money section-misc section-misc section-misc'
     'section-cost section-misc section-misc section-misc';
     grid-template-columns: 15% 45% 30% 10%;
     grid-template-rows: auto auto auto auto auto auto auto auto ;
 }
 
-#section-pic{grid-area: section-pic;}
-#section-name{grid-area: section-name;}
-#section-tier{grid-area: section-tier;}
-#section-close{grid-area: section-close;}
-#section-1-label{grid-area: section-1-label;}
-#section-1{grid-area: section-1;}
-#section-1-view{grid-area: section-1-view;}
-#section-2-label{grid-area: section-2-label;}
-#section-2{grid-area: section-2;}
-#section-2-view{grid-area: section-2-view;}
-#section-3-label{grid-area: section-3-label;}
-#section-3{grid-area: section-3;}
-#section-3-view{grid-area: section-3-view;}
-#section-4-label{grid-area: section-4-label;}
-#section-4{grid-area: section-4;}
-#section-4-view{grid-area: section-4-view;}
-#section-5-label{grid-area: section-5-label;}
-#section-5{grid-area: section-5;}
-#section-5-view{grid-area: section-5-view;}
-#section-money{grid-area: section-money;}
-#section-cost{grid-area: section-cost;}
-#section-misc{grid-area: section-misc;}
+.section-pic{grid-area: section-pic;}
+.section-name{grid-area: section-name;}
+.section-tier{grid-area: section-tier;}
+.section-close{grid-area: section-close;}
+.dr-1-label{grid-area: dr-1-label;}
+.dr-1{grid-area: dr-1;}
+.dr-1-view{grid-area: dr-1-view;}
+.dr-2-label{grid-area: dr-2-label;}
+.dr-2{grid-area: dr-2;}
+.dr-2-view{grid-area: dr-2-view;}
+.dr-3-label{grid-area: dr-3-label;}
+.dr-3{grid-area: dr-3;}
+.dr-3-view{grid-area: dr-3-view;}
+.dr-4-label{grid-area: dr-4-label;}
+.dr-4{grid-area: dr-4;}
+.dr-4-view{grid-area: dr-4-view;}
+.dr-5-label{grid-area: dr-5-label;}
+.dr-5{grid-area: dr-5;}
+.dr-5-view{grid-area: dr-5-view;}
+.section-money{grid-area: section-money;}
+.section-cost{grid-area: section-cost;}
+.section-misc{grid-area: section-misc;}
