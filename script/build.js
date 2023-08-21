@@ -3,18 +3,67 @@ midSections = []
 coreSections = []
 aftSections = []
 
+foreSectionsIDs = []
+midSectionsIDs = []
+coreSectionsIDs = []
+aftSectionsIDs = []
+
+// Assigning section locations to variables
 const fore = document.querySelector('#fore-frame');
 const mid = document.querySelector('#mid-frame');
 const core = document.querySelector('#core-frame');
 const aft = document.querySelector('#aft-frame');
 
-function addSection(location, number){
-
-    number = number + 1
+function addSection(location){
+    
+    // Increasing section ID in location and assigning to number variable and adding to section IDs list
+    switch (location){
+        case "fore":
+            if(Math.max.apply(null, foreSectionsIDs) >= 1){
+                number = Math.max.apply(null, foreSectionsIDs);
+            }
+            else{
+                number = 0
+            }
+            number++
+            foreSectionsIDs.push(number)
+            break;
+        case "mid":
+            if(Math.max.apply(null, midSectionsIDs) >= 1){
+                number = Math.max.apply(null, midSectionsIDs);
+            }
+            else{
+                number = 0
+            }
+            number++
+            midSectionsIDs.push(number)
+            break;
+        case "core":
+            if(Math.max.apply(null, coreSectionsIDs) >= 1){
+                number = Math.max.apply(null, coreSectionsIDs);
+                }
+            else{
+                number = 0
+            }
+            number++
+            coreSectionsIDs.push(number)
+            break;
+        case "aft":
+            if(Math.max.apply(null, aftSectionsIDs) >= 1){
+                number = Math.max.apply(null, aftSectionsIDs);
+            }
+            else{
+                number = 0
+            }
+            number++
+            aftSectionsIDs.push(number)
+            break;
+        }
 
     // Creating card div
     let newSection = document.createElement("div");
     newSection.setAttribute("class", "section-card card");
+    newSection.setAttribute("id", location + number + "section");
     //  Creating section pic div and image
     newDiv = document.createElement("div");
     newDiv.setAttribute("class", "section-pic");
@@ -46,6 +95,7 @@ function addSection(location, number){
     newDiv.setAttribute("class", "section-close");
     newItem = document.createElement("button");
     newItem.setAttribute("class", "small-button");
+    newItem.setAttribute("id", location + number + "section-close-button");
     newPic = document.createElement("img");
     newPic.setAttribute("class", "button-image");
     newPic.setAttribute("src", "images/minus.png");
@@ -218,52 +268,126 @@ function addSection(location, number){
     newSection.appendChild(newDiv);
 
     // window[location + number] = newSection;
-    console.log(number)
-
+    
+    // Adding section to correct location and updating section number of that location and adding number to IDs in use list
     switch (location){
     case "fore":
-        console.log("fore")
         foreSections.push(newSection);
         fore.appendChild(newSection);
-        document.getElementById("fore-sections-number").innerHTML = number;
+        document.getElementById("fore-sections-number").innerHTML++;
         break;
     case "mid":
-        console.log("mid")
         midSections.push(newSection);
         mid.appendChild(newSection);
-        document.getElementById("mid-sections-number").innerHTML = number;
+        document.getElementById("mid-sections-number").innerHTML++;
         break;
     case "core":
-        console.log("core")
         coreSections.push(newSection);
         core.appendChild(newSection);
-        document.getElementById("core-sections-number").innerHTML = number;
+        document.getElementById("core-sections-number").innerHTML++;
         break;
     case "aft":
-        console.log("aft")
         aftSections.push(newSection);
         aft.appendChild(newSection);
-        document.getElementById("aft-sections-number").innerHTML = number;
+        document.getElementById("aft-sections-number").innerHTML++;
         break;
     }
 
+    // Assigning the close button function
+    document.getElementById(location + number + "section-close-button").addEventListener("click",findID, false);
 
-    //         card.setAttribute('class', 'playCard');
-    //         card.appendChild(cardback.cloneNode(true)); // adds a copy of cardback
-    //         card.addEventListener('click', flipCard);   // activates flipcard function when a card is clicked
-    //         grid.appendChild(card);
-
-    
+    // Checking if core sections limits are being kept to
+    coreLimits();
 }
 
-addSection("fore", 0);
-addSection("mid", 0);
-addSection("core", 0);
-addSection("aft", 0);
+function findID(e){
+    let number = e.currentTarget.id.replace(/\D/g,"");
+    let location =  e.currentTarget.id.replace("section-close-button","");
+    location = location.replace(number,"");
+    number = parseInt(number, 10)
+    removeSection(location, number);
+}
+
+// Checking if core sections limits are being kept to
+function coreLimits(){
+    
+    let foreNumber = parseInt(document.getElementById("fore-sections-number").innerHTML, 10);
+    let midNumber = parseInt(document.getElementById("mid-sections-number").innerHTML, 10);
+    let coreNumber = parseInt(document.getElementById("core-sections-number").innerHTML, 10);
+    let aftNumber = parseInt(document.getElementById("aft-sections-number").innerHTML, 10);
+
+    if(coreNumber < Math.floor((foreNumber + midNumber + aftNumber)/3)){
+        document.getElementById("section-warning-text").innerHTML = "Too few core sections";
+    }
+    else if(coreNumber > Math.floor((foreNumber + midNumber + coreNumber + aftNumber)/2)){
+        document.getElementById("section-warning-text").innerHTML = "Too many core sections";
+    }
+    else{
+        document.getElementById("section-warning-text").innerHTML = "<br>";
+    }
+}
+
+function removeSection(location, number){
+    // Checking that at least one section is in a location    
+    if(parseInt(document.getElementById(location + "-sections-number").innerHTML, 10) == 1){
+        document.getElementById("section-warning-text").innerHTML = "Each location must have at least one section";
+        setTimeout(() => {coreLimits()}, 5000);
+    }
+    else{       
+        // Removing section elements        
+        let element = document.getElementById(location + number + "section");
+        element.innerHTML = '';
+        element.remove();
+        // Lowering section count number
+        document.getElementById(location + "-sections-number").innerHTML--;
+        // Removing the id number from the section ID list
+        switch (location){
+            case "fore":
+                for (let i = 0; i < foreSectionsIDs.length; i++) {
+                    if (foreSectionsIDs[i] === number) {
+                        let spliced = foreSectionsIDs.splice(i, 1);
+                    }
+                }
+                break;
+                case "mid":
+                    for (let i = 0; i < midSectionsIDs.length; i++) {
+                        if (midSectionsIDs[i] === number) {
+                            let spliced = midSectionsIDs.splice(i, 1);
+                        }
+                    }
+                case "core":
+                    for (let i = 0; i < coreSectionsIDs.length; i++) {
+                        if (coreSectionsIDs[i] === number) {
+                            let spliced = coreSectionsIDs.splice(i, 1);
+                        }
+                    }
+                case "aft":
+                    for (let i = 0; i < aftSectionsIDs.length; i++) {
+                        if (aftSectionsIDs[i] === number) {
+                            let spliced = aftSectionsIDs.splice(i, 1);
+                        }
+                    }
+                }
+        
+        // Checking if core sections limits are being kept to
+        coreLimits();
+    }
+}
+
+addSection("fore");
+addSection("mid");
+addSection("core");
+addSection("aft");
 
 
 // Assigning plus buttons
-document.getElementById("fore-button-plus").addEventListener("click",a=>{addSection("fore", parseInt(document.getElementById("fore-sections-number").innerHTML, 10))});
-document.getElementById("mid-button-plus").addEventListener("click",a=>{addSection("mid", parseInt(document.getElementById("mid-sections-number").innerHTML, 10))});
-document.getElementById("core-button-plus").addEventListener("click",a=>{addSection("core", parseInt(document.getElementById("core-sections-number").innerHTML, 10))});
-document.getElementById("aft-button-plus").addEventListener("click",a=>{addSection("aft", parseInt(document.getElementById("aft-sections-number").innerHTML, 10))});
+document.getElementById("fore-button-plus").addEventListener("click",a=>{addSection("fore")});
+document.getElementById("mid-button-plus").addEventListener("click",a=>{addSection("mid")});
+document.getElementById("core-button-plus").addEventListener("click",a=>{addSection("core")});
+document.getElementById("aft-button-plus").addEventListener("click",a=>{addSection("aft")});
+
+// Assigning minus buttons
+document.getElementById("fore-button-minus").addEventListener("click",a=>{removeSection("fore", Math.max.apply(null, foreSectionsIDs))});
+document.getElementById("mid-button-minus").addEventListener("click",a=>{removeSection("mid", Math.max.apply(null, midSectionsIDs))});
+document.getElementById("core-button-minus").addEventListener("click",a=>{removeSection("core", Math.max.apply(null, coreSectionsIDs))});
+document.getElementById("aft-button-minus").addEventListener("click",a=>{removeSection("aft", Math.max.apply(null, aftSectionsIDs))});
