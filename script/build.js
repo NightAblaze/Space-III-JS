@@ -1,8 +1,10 @@
+
 foreSections = []
 midSections = []
 coreSections = []
 aftSections = []
 
+// Sections IDs currently in use
 foreSectionsIDs = []
 midSectionsIDs = []
 coreSectionsIDs = []
@@ -219,7 +221,7 @@ function addSection(location){
     newDiv = document.createElement("div");
     newDiv.setAttribute("class", "dr-5-label");
     newItem = document.createElement("p");
-    newText = document.createTextNode("5");
+    newText = document.createTextNode("#");
     newItem.appendChild(newText);
     newDiv.appendChild(newItem);
     newSection.appendChild(newDiv);
@@ -378,6 +380,51 @@ addSection("fore");
 addSection("mid");
 addSection("core");
 addSection("aft");
+
+// Creating the dropdown list for frame selection and applying it to the dropdown
+let frameSelect = document.getElementById("frame-name-dd");
+let frameOptions = Object.keys(frames);
+for(let i = 0; i < frameOptions.length; i++) {
+    let opt = frameOptions[i];
+    let el = document.createElement("option");
+    el.textContent = opt;
+    el.value = opt;
+    frameSelect.appendChild(el);
+}
+
+// Creating event when frame selection is updated
+document.getElementById("frame-name-dd").addEventListener("change", refreshFrame);
+ function refreshFrame(){
+    let frameSelection = document.getElementById("frame-name-dd").value;
+
+    document.getElementById("frame-tier-text").innerHTML = frames[frameSelection]["tier"];
+    document.getElementById("frame-armour-pattern-text").innerHTML = frames[frameSelection]["armour pattern fore"] + "-" + frames[frameSelection]["armour pattern mid"] + "-" + frames[frameSelection]["armour pattern aft"];
+    document.getElementById("frame-shield-pattern-text").innerHTML = frames[frameSelection]["shield pattern front"] + "-" + frames[frameSelection]["shield pattern front side"] + "-" + frames[frameSelection]["shield pattern rear side"] + "-" + frames[frameSelection]["shield pattern rear"];
+
+    if(frames[frameSelection]["flat move cost"] == 0){
+        document.getElementById("frame-move-cost-text").innerHTML = "1/" + frames[frameSelection]["move cost base divider"] + " per " + frames[frameSelection]["move cost per sections"] + " sections";
+    }
+    else{
+        document.getElementById("frame-move-cost-text").innerHTML = "1/" + frames[frameSelection]["move cost base divider"] + " per " + frames[frameSelection]["move cost per sections"] + " sections + " + frames[frameSelection]["flat move cost"] + "/" + frames[frameSelection]["move cost base divider"];
+    }
+    
+    document.getElementById("frame-move-actual-text").innerHTML = frames[frameSelection]["tier"];
+    document.getElementById("frame-turn-rate-text").innerHTML = frames[frameSelection]["tier"];
+    document.getElementById("frame-turn-actual-text").innerHTML = frames[frameSelection]["tier"];
+    document.getElementById("frame-damage-limit-text").innerHTML = frames[frameSelection]["tier"];
+    document.getElementById("frame-damage-actual-text").innerHTML = frames[frameSelection]["tier"];
+    document.getElementById("frame-health-text").innerHTML = frames[frameSelection]["tier"];
+    document.getElementById("frame-health-actual-text").innerHTML = frames[frameSelection]["tier"];
+    document.getElementById("frame-upgrade-cost-text").innerHTML = frames[frameSelection]["tier"];
+    document.getElementById("frame-cost-text").innerHTML = frames[frameSelection]["tier"];
+    document.getElementById("frame-sensors-text").innerHTML = frames[frameSelection]["tier"];
+    document.getElementById("frame-sensors-actual-text").innerHTML = frames[frameSelection]["tier"];
+    document.getElementById("frame-signal-text").innerHTML = frames[frameSelection]["tier"];
+    document.getElementById("frame-signal-actual-text").innerHTML = frames[frameSelection]["tier"];
+    document.getElementById("frame-misc-text").innerHTML = frames[frameSelection]["tier"];
+    
+
+}
 
 
 // Assigning plus buttons
