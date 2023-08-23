@@ -172,6 +172,11 @@ td{
     
 } */
 
+.selection-label{
+    font-size: 8px;
+    color: red;
+}
+
 .detail-table td{
     text-align: center;
     width: 34%;
@@ -229,7 +234,7 @@ td{
     'dr-5-label dr-5 dr-5 dr-5-view'
     'section-money section-misc section-misc section-misc'
     'section-cost section-misc section-misc section-misc';
-    grid-template-columns: 15% 45% 30% 10%;
+    grid-template-columns: 15% 55% 20% 10%;
     grid-template-rows: auto auto auto auto auto auto auto auto ;
 }
 
