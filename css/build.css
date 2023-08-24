@@ -68,6 +68,7 @@ label{
 
 .card-selection{
     width: 95%;
+    cursor: pointer;
 }
 
 #frame-card{
@@ -106,6 +107,7 @@ label{
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
 }
 
 #frame-pic{grid-area: frame-pic;}
@@ -177,6 +179,39 @@ td{
     color: red;
 }
 
+.system-box-label{
+    font-size: 12px;
+    color: blue;
+}
+
+.section-card-selection{
+    width: 95%;
+    cursor: pointer;
+}
+
+.section-card-div{
+    display: flex;
+    width: 100%;
+}
+
+.section-card-label-div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+}
+
+.section-card-selection-div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+}
+
+.box{
+    cursor: pointer;
+}
+
 .detail-table td{
     text-align: center;
     width: 34%;
@@ -207,6 +242,7 @@ td{
     background-color: white;
     display: flex;
     justify-content: center;
+    cursor: pointer;
 }
 
 .small-button{
@@ -217,11 +253,16 @@ td{
     background-color: white;
     display: flex;
     justify-content: center;
+    cursor: pointer;
 }
 
 .button-image{
     width: 100%;
     margin: auto;
+}
+
+.section-contents{
+    display: block;
 }
 
 .section-card{

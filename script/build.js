@@ -346,111 +346,150 @@ function updateCard(e){
     document.getElementById(location + number + "section-tier-text").innerHTML = sections[sectionSelection]["tier"];
     
     // For loop to assign damage regions 1 to 4
-    for(let dr = 1; dr < 5; dr++) {
+    for(let dr = 1; dr < 5; dr++){
+        document.getElementById(location + number + "dr-" + dr + "-contents").innerHTML = ""
         let contents = document.querySelector("#" + location + number + "dr-" + dr + "-contents");
-        if(sections[sectionSelection]["slot_" + dr + "-1_amount"] == "slot"){
+        
+        // For loop for different slots in each damage region
+        for(let slot = 1; slot < 3; slot++){
+            if(sections[sectionSelection]["slot_" + dr + "-" + slot + "_amount"] == "slot"){
 
-            // code to add dropdown limited to type and a label just before
-            newItem = document.createElement("p");
-            newItem.setAttribute("class", "selection-label");
-            newItem.setAttribute("id", location + number + "dr-" + dr + "selection-label");
-            contents.appendChild(newItem);
-            newItem = document.createElement("select");
-            newItem.setAttribute("class", "card-selection");
-            newItem.setAttribute("name", "section-name-dd");
-            newItem.setAttribute("id", location + number + "dr-" + dr + "-dd");
-            el = document.createElement("option");
-            el.setAttribute("value", "");
-            el.setAttribute("selected", true);
-            el.setAttribute("disabled", true);
-            el.setAttribute("hidden", true);
-            newItem.appendChild(el);
+                // code to add dropdown limited to type and a label just before
+                newDiv = document.createElement("div");
+                newDiv.setAttribute("class", "section-card-div");
+                newParaDiv = document.createElement("div");
+                newParaDiv.setAttribute("class", "section-card-label-div");
+                newSelectionDiv = document.createElement("div");
+                newSelectionDiv.setAttribute("class", "section-card-selection-div");
+                newItem = document.createElement("p");
+                newItem.setAttribute("class", "selection-label");
+                newItem.setAttribute("id", location + number + "dr-" + dr + "selection-label");
+                newParaDiv.appendChild(newItem);
+                newSelect = document.createElement("select");
+                newSelect.setAttribute("class", "section-card-selection");
+                newSelect.setAttribute("name", "section-name-dd");
+                newSelect.setAttribute("id", location + number + "dr-" + dr + "-dd");
+                el = document.createElement("option");
+                el.setAttribute("value", "");
+                el.setAttribute("selected", true);
+                el.setAttribute("disabled", true);
+                el.setAttribute("hidden", true);
+                newSelect.appendChild(el);
 
-            // Applying dropdown to section dr's depending on type
-            switch (sections[sectionSelection]["slot_" + dr + "-1"]){
-                case "Power":
-                    document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Power";
-                    for(let i = 0; i < powerOptions.length; i++) {
-                        let opt = powerOptions[i];
-                        let el = document.createElement("option");
-                        el.textContent = opt;
-                        el.value = opt;
-                        newItem.appendChild(el);
-                    }
-                    break;
-                case "Defence":
-                    document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Defence";
-                    for(let i = 0; i < defenceOptions.length; i++) {
-                        let opt = defenceOptions[i];
-                        let el = document.createElement("option");
-                        el.textContent = opt;
-                        el.value = opt;
-                        newItem.appendChild(el);
-                    }
-                    break;
-                case "Utility":
-                    document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Utiliy";
-                    for(let i = 0; i < utilityOptions.length; i++) {
-                        let opt = utilityOptions[i];
-                        let el = document.createElement("option");
-                        el.textContent = opt;
-                        el.value = opt;
-                        newItem.appendChild(el);
-                    }
-                    break;
-                case "Light Weapon":
-                    document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Light Weapon";
-                    for(let i = 0; i < lghWeaponOptions.length; i++) {
-                        let opt = lghWeaponOptions[i];
-                        let el = document.createElement("option");
-                        el.textContent = opt;
-                        el.value = opt;
-                        newItem.appendChild(el);
-                    }
-                    break;
-                case "Heavy Weapon":
-                    document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Heavy Weapon";
-                    for(let i = 0; i < hvyWeaponOptions.length; i++) {
-                        let opt = hvyWeaponOptions[i];
-                        let el = document.createElement("option");
-                        el.textContent = opt;
-                        el.value = opt;
-                        newItem.appendChild(el);
-                    }
-                    break;
-                case "Defence Armour":
-                    document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Defence Armour";
-                    for(let i = 0; i < defArmourOptions.length; i++) {
-                        let opt = defArmourOptions[i];
-                        let el = document.createElement("option");
-                        el.textContent = opt;
-                        el.value = opt;
-                        newItem.appendChild(el);
-                    }
-                    break;
-                case "Defence Shield":
-                    document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Defence Shield";
-                    for(let i = 0; i < defShieldOptions.length; i++) {
-                        let opt = defShieldOptions[i];
-                        let el = document.createElement("option");
-                        el.textContent = opt;
-                        el.value = opt;
-                        newItem.appendChild(el);
-                    }
-                    break;
+                // Applying dropdown to section dr's depending on type
+                switch (sections[sectionSelection]["slot_" + dr + "-" + slot]){
+                    case "Power":
+                        newText = document.createTextNode("Power");
+                        newItem.appendChild(newText);
+                        // document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Power";
+                        for(let i = 0; i < powerOptions.length; i++) {
+                            let opt = powerOptions[i];
+                            let el = document.createElement("option");
+                            el.textContent = opt;
+                            el.value = opt;
+                            newSelect.appendChild(el);
+                        }
+                        break;
+                    case "Defence":
+                        newText = document.createTextNode("Defence");
+                        newItem.appendChild(newText);
+                        // document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Defence";
+                        for(let i = 0; i < defenceOptions.length; i++) {
+                            let opt = defenceOptions[i];
+                            let el = document.createElement("option");
+                            el.textContent = opt;
+                            el.value = opt;
+                            newSelect.appendChild(el);
+                        }
+                        break;
+                    case "Utility":
+                        newText = document.createTextNode("Utility");
+                        newItem.appendChild(newText);
+                        // document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Utiliy";
+                        for(let i = 0; i < utilityOptions.length; i++) {
+                            let opt = utilityOptions[i];
+                            let el = document.createElement("option");
+                            el.textContent = opt;
+                            el.value = opt;
+                            newSelect.appendChild(el);
+                        }
+                        break;
+                    case "Light Weapon":
+                        newText = document.createTextNode("Light Weapon");
+                        newItem.appendChild(newText);
+                        // document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Light Weapon";
+                        for(let i = 0; i < lghWeaponOptions.length; i++) {
+                            let opt = lghWeaponOptions[i];
+                            let el = document.createElement("option");
+                            el.textContent = opt;
+                            el.value = opt;
+                            newSelect.appendChild(el);
+                        }
+                        break;
+                    case "Heavy Weapon":
+                        newText = document.createTextNode("Heavy Weapon");
+                        newItem.appendChild(newText);
+                        // document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Heavy Weapon";
+                        for(let i = 0; i < hvyWeaponOptions.length; i++) {
+                            let opt = hvyWeaponOptions[i];
+                            let el = document.createElement("option");
+                            el.textContent = opt;
+                            el.value = opt;
+                            newSelect.appendChild(el);
+                        }
+                        break;
+                    case "Defence Armour":
+                        newText = document.createTextNode("Defence Armour");
+                        newItem.appendChild(newText);
+                        // document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Defence Armour";
+                        for(let i = 0; i < defArmourOptions.length; i++) {
+                            let opt = defArmourOptions[i];
+                            let el = document.createElement("option");
+                            el.textContent = opt;
+                            el.value = opt;
+                            newSelect.appendChild(el);
+                        }
+                        break;
+                    case "Defence Shield":
+                        newText = document.createTextNode("Defence Shield");
+                        newItem.appendChild(newText);
+                        // document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Defence Shield";
+                        for(let i = 0; i < defShieldOptions.length; i++) {
+                            let opt = defShieldOptions[i];
+                            let el = document.createElement("option");
+                            el.textContent = opt;
+                            el.value = opt;
+                            newSelect.appendChild(el);
+                        }
+                        break;
+                }
+                newSelectionDiv.appendChild(newSelect);
+                newDiv.appendChild(newParaDiv);
+                newDiv.appendChild(newSelectionDiv);
+                contents.appendChild(newDiv);
             }
-            contents.appendChild(newItem);
+        
+            else{
+                // Code to add non slot damage region 
+                newDiv = document.createElement("div");
+                newItem = document.createElement("label");
+                newItem.setAttribute("class", "system-box-label");
+                newText = document.createTextNode(sections[sectionSelection]["slot_" + dr + "-" + slot]);
+                newItem.appendChild(newText);
+                // For loop for adding checkboxs for each system box required
+                for(let i = 0; i < sections[sectionSelection]["slot_" + dr + "-" + slot + "_amount"]; i++){
+                    newBox = document.createElement("input");
+                    newBox.setAttribute("id", location + number + "dr-" + dr + sections[sectionSelection]["slot_" + dr + "-" + slot] + "box"+ i);
+                    newBox.setAttribute("class", "box");
+                    newBox.setAttribute("type", "checkbox");
+                    newItem.appendChild(newBox);
+                }
+                newDiv.appendChild(newItem);
+                contents.appendChild(newDiv);
+            }
         }
-        else{
-            // code to add text/boxes
-        }
-
-        // again except for 2nd possible option
-        if(sections[sectionSelection]["slot_"+dr+"-2_amount"] == "slot"){
-
-        }
-
         // Checks to see if a view button is needed
+        document.getElementById(location + number + "dr-" + dr + "-view").innerHTML = ""
         if(sections[sectionSelection]["slot_" + dr + "-1_amount"] == "slot" || sections[sectionSelection]["slot_1-2_amount"] == "slot"){
             // Adds the view button
             let viewBut = document.querySelector("#" + location + number + "dr-" + dr + "-view");
@@ -467,16 +506,34 @@ function updateCard(e){
             // Assigning the view button
             document.getElementById(location + number + "dr-" + dr + "-view-button").addEventListener("click", view, false);
         }
-
-        // id's that need doing v
-        
-        location + number + "dr-5-contents"
-        location + number + "dr-5-view"
-        location + number + "section-cost"
-        location + number + "section-misc"
-        
-        
     }
+
+    document.getElementById(location + number + "dr-5-contents").innerHTML = ""
+    let contents = document.querySelector("#" + location + number + "dr-5-contents");
+    // Code to add non slot damage in # region 
+    newDiv = document.createElement("div");
+    newItem = document.createElement("label");
+    newItem.setAttribute("class", "system-box-label");
+    newText = document.createTextNode(sections[sectionSelection]["slot_#"]);
+    newItem.appendChild(newText);
+    // For loop for adding checkboxs for each system box required
+    for(let i = 0; i < sections[sectionSelection]["slot_#_amount"]; i++){
+        newBox = document.createElement("input");
+        newBox.setAttribute("id", location + number + "dr-5" + sections[sectionSelection]["slot_#"] + "box"+ i);
+        newBox.setAttribute("class", "box");
+        newBox.setAttribute("type", "checkbox");
+        newItem.appendChild(newBox);
+    }
+    newDiv.appendChild(newItem);
+    contents.appendChild(newDiv);
+    
+    // need a function to check for frame specials in # damage region!!!
+    
+    location + number + "dr-5-contents"
+    location + number + "dr-5-view"
+
+    document.getElementById(location + number + "section-cost").innerHTML = sections[sectionSelection]["cost"];
+    document.getElementById(location + number + "section-misc").innerHTML = sections[sectionSelection]["misc"];
 }
 
 // Finds the location and number of the section clicked then runs removeSection function
