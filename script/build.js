@@ -339,7 +339,7 @@ function updateCard(e){
     let number = e.currentTarget.id.replace(/\D/g,"");
     let location =  e.currentTarget.id.replace("section-name-dd","");
     location = location.replace(number,"");
-    number = parseInt(number, 10)
+    number = parseInt(number, 10);
 
     let sectionSelection = document.getElementById(e.currentTarget.id).value;
 
@@ -368,7 +368,7 @@ function updateCard(e){
                 newSelect = document.createElement("select");
                 newSelect.setAttribute("class", "section-card-selection");
                 newSelect.setAttribute("name", "section-name-dd");
-                newSelect.setAttribute("id", location + number + "dr-" + dr + "-dd");
+                newSelect.setAttribute("id", location + number + "dr-" + dr + "-dd_slot" + slot);
                 el = document.createElement("option");
                 el.setAttribute("value", "");
                 el.setAttribute("selected", true);
@@ -529,6 +529,7 @@ function updateCard(e){
     
     // need a function to check for frame specials in # damage region!!!
     
+    // still to do/finish
     location + number + "dr-5-contents"
     location + number + "dr-5-view"
 
@@ -582,28 +583,28 @@ function removeSection(location, number){
             case "fore":
                 for (let i = 0; i < foreSectionsIDs.length; i++) {
                     if (foreSectionsIDs[i] === number) {
-                        let spliced = foreSectionsIDs.splice(i, 1);
+                        foreSectionsIDs.splice(i, 1);
                     }
                 }
                 break;
             case "mid":
                 for (let i = 0; i < midSectionsIDs.length; i++) {
                     if (midSectionsIDs[i] === number) {
-                        let spliced = midSectionsIDs.splice(i, 1);
+                        midSectionsIDs.splice(i, 1);
                     }
                 }
                 break;
             case "core":
                 for (let i = 0; i < coreSectionsIDs.length; i++) {
                     if (coreSectionsIDs[i] === number) {
-                        let spliced = coreSectionsIDs.splice(i, 1);
+                        coreSectionsIDs.splice(i, 1);
                     }
                 }
                 break;
             case "aft":
                 for (let i = 0; i < aftSectionsIDs.length; i++) {
                     if (aftSectionsIDs[i] === number) {
-                        let spliced = aftSectionsIDs.splice(i, 1);
+                        aftSectionsIDs.splice(i, 1);
                     }
                 }
                 break;
@@ -670,11 +671,120 @@ function refreshFrame(){
 
 function view(e){
     let number = e.currentTarget.id.replace(/\D/g,"");
-    let location =  e.currentTarget.id.replace("-view-button","");
-    location = location.replace(number,"");
+    number = number.slice(0,-1);
+    let dr = e.currentTarget.id.replace(/\D/g,"");
+    dr = dr.slice(-1, dr.length);
+    let location =  e.currentTarget.id.replace(number + "dr-" + dr + "-view-button","");
     number = parseInt(number, 10)
-    // add rest of function to view card --- above will need modification as id = location + number + "dr-" + dr + "-view-button"
-    console.log("View Button Clicked")
+    dr = parseInt(dr, 10)
+
+    console.log("View Button Clicked at " + location + " id: " + number + " dr: " + dr);
+
+    // id of drop downs: location + number + "dr-" + dr + "-dd_slot" + slot
+
+    // For loop to check whether each slot needs a card to be created to view
+    let sectionSelection = document.getElementById(location + number + "section-name-dd").value;
+    console.log(sectionSelection);
+    for(let slot = 1; slot < 3; slot++){
+        if(sections[sectionSelection]["slot_" + dr + "-" + slot + "_amount"] == "slot"){
+            
+            // need a check for blank inputs
+            
+            let card = document.getElementById(location + number + "dr-" + dr + "-dd_slot" + slot).value;
+            console.log(card);
+            // Creating component card holder
+            let componentCardDiv = document.createElement("div");
+            componentCardDiv.setAttribute("class", "component-card-holder");
+            // Creating component card
+            componentCard = document.createElement("div");
+            componentCard.setAttribute("class", "component-card card");
+            //  Creating component pic div and image
+            newDiv = document.createElement("div");
+            newDiv.setAttribute("class", "component-pic");
+            newItem = document.createElement("img");
+            newItem.setAttribute("class", "card-picture");
+            newItem.setAttribute("src", "images/" + components[card]["type"] + ".png");
+            console.log(components[card]["type"])                                                 // Remove
+            newItem.setAttribute("alt", components[card]["type"]);
+            newDiv.appendChild(newItem);
+            componentCard.appendChild(newDiv);
+            // Creating component name div, paragraph and text
+            newDiv = document.createElement("div");
+            newDiv.setAttribute("class", "component-name");
+            newItem = document.createElement("p");
+            newText = document.createTextNode(card);
+            newItem.appendChild(newText);
+            newDiv.appendChild(newItem);
+            componentCard.appendChild(newDiv);
+            //  Creating tier div, paragraph and text
+            newDiv = document.createElement("div");
+            newDiv.setAttribute("class", "component-tier");
+            newItem = document.createElement("p");
+            newText = document.createTextNode(components[card]["tier"]);
+            newItem.appendChild(newText);
+            newDiv.appendChild(newItem);
+            componentCard.appendChild(newDiv);
+            // Creating card systems div, paragraph and text
+            newDiv = document.createElement("div");
+            newDiv.setAttribute("class", "component-systems");
+            // For loop for each system
+            for(let i = 1; i < 7; i++){
+                if("system_" + i != ""){
+                    // Code to add systems
+                    newSystemDiv = document.createElement("div");
+                    newItem = document.createElement("label");
+                    newItem.setAttribute("class", "system-box-label");
+                    newText = document.createTextNode(components[card]["system_" + i]);
+                    newItem.appendChild(newText);
+                    // For loop for adding checkboxs for each system box required
+                    for(let j = 0; j < components[card]["system_" + i + "_amount"]; j++){
+                        newBox = document.createElement("input");
+                        newBox.setAttribute("class", "box");
+                        newBox.setAttribute("type", "checkbox");
+                        newItem.appendChild(newBox);
+                    }
+                    newSystemDiv.appendChild(newItem);
+                    newDiv.appendChild(newSystemDiv);
+                }
+            }
+            componentCard.appendChild(newDiv); 
+            // need to add misc 1
+            // need bonus boxes as well!!!                                                                              HERe!!!
+
+            // Creating card money div and pic
+            newDiv = document.createElement("div");
+            newDiv.setAttribute("class", "component-money");
+            newItem = document.createElement("img");
+            newItem.setAttribute("class", "card-picture");
+            newItem.setAttribute("src", "images/money_bag.png");
+            newItem.setAttribute("alt", "Cost");
+            newDiv.appendChild(newItem);
+            componentCard.appendChild(newDiv);
+            // Creating section cost div and paragraph
+            newDiv = document.createElement("div");
+            newDiv.setAttribute("class", "component-cost");
+            newItem = document.createElement("p");
+            newText = document.createTextNode(components[card]["cost"]);
+            newItem.appendChild(newText);
+            newDiv.appendChild(newItem);
+            componentCard.appendChild(newDiv);
+            //Creating section misc and paragraph
+            newDiv = document.createElement("div");
+            newDiv.setAttribute("class", "component-misc");
+            newItem = document.createElement("p");
+            newText = document.createTextNode(components[card]["misc_2"]);
+            newItem.appendChild(newText);
+            newDiv.appendChild(newItem);
+            componentCard.appendChild(newDiv);
+
+            // Adding card to main-grid
+            document.querySelector('#main-grid').appendChild(componentCard);
+        }
+
+        
+    }
+    
+
 }
 
 
