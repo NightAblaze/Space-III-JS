@@ -670,6 +670,7 @@ function refreshFrame(){
 }
 
 function view(e){
+    // Gets the section number, damage region and section location of the view button pressed
     let number = e.currentTarget.id.replace(/\D/g,"");
     number = number.slice(0,-1);
     let dr = e.currentTarget.id.replace(/\D/g,"");
@@ -678,115 +679,145 @@ function view(e){
     number = parseInt(number, 10)
     dr = parseInt(dr, 10)
 
-    console.log("View Button Clicked at " + location + " id: " + number + " dr: " + dr);
-
-    // id of drop downs: location + number + "dr-" + dr + "-dd_slot" + slot
-
-    // For loop to check whether each slot needs a card to be created to view
     let sectionSelection = document.getElementById(location + number + "section-name-dd").value;
-    console.log(sectionSelection);
+
+    // For loop to check whether at least one slot has a value
+    let runView = false;
     for(let slot = 1; slot < 3; slot++){
         if(sections[sectionSelection]["slot_" + dr + "-" + slot + "_amount"] == "slot"){
-            
-            // need a check for blank inputs
-            
-            let card = document.getElementById(location + number + "dr-" + dr + "-dd_slot" + slot).value;
-            console.log(card);
-            // Creating component card holder
-            let componentCardDiv = document.createElement("div");
-            componentCardDiv.setAttribute("class", "component-card-holder");
-            // Creating component card
-            componentCard = document.createElement("div");
-            componentCard.setAttribute("class", "component-card card");
-            //  Creating component pic div and image
-            newDiv = document.createElement("div");
-            newDiv.setAttribute("class", "component-pic");
-            newItem = document.createElement("img");
-            newItem.setAttribute("class", "card-picture");
-            newItem.setAttribute("src", "images/" + components[card]["type"] + ".png");
-            console.log(components[card]["type"])                                                 // Remove
-            newItem.setAttribute("alt", components[card]["type"]);
-            newDiv.appendChild(newItem);
-            componentCard.appendChild(newDiv);
-            // Creating component name div, paragraph and text
-            newDiv = document.createElement("div");
-            newDiv.setAttribute("class", "component-name");
-            newItem = document.createElement("p");
-            newText = document.createTextNode(card);
-            newItem.appendChild(newText);
-            newDiv.appendChild(newItem);
-            componentCard.appendChild(newDiv);
-            //  Creating tier div, paragraph and text
-            newDiv = document.createElement("div");
-            newDiv.setAttribute("class", "component-tier");
-            newItem = document.createElement("p");
-            newText = document.createTextNode(components[card]["tier"]);
-            newItem.appendChild(newText);
-            newDiv.appendChild(newItem);
-            componentCard.appendChild(newDiv);
-            // Creating card systems div, paragraph and text
-            newDiv = document.createElement("div");
-            newDiv.setAttribute("class", "component-systems");
-            // For loop for each system
-            for(let i = 1; i < 7; i++){
-                if("system_" + i != ""){
-                    // Code to add systems
-                    newSystemDiv = document.createElement("div");
-                    newItem = document.createElement("label");
-                    newItem.setAttribute("class", "system-box-label");
-                    newText = document.createTextNode(components[card]["system_" + i]);
-                    newItem.appendChild(newText);
-                    // For loop for adding checkboxs for each system box required
-                    for(let j = 0; j < components[card]["system_" + i + "_amount"]; j++){
-                        newBox = document.createElement("input");
-                        newBox.setAttribute("class", "box");
-                        newBox.setAttribute("type", "checkbox");
-                        newItem.appendChild(newBox);
-                    }
-                    newSystemDiv.appendChild(newItem);
-                    newDiv.appendChild(newSystemDiv);
-                }
+            if(document.getElementById(location + number + "dr-" + dr + "-dd_slot" + slot).value != ""){
+                runView = true;
             }
-            componentCard.appendChild(newDiv); 
-            // need to add misc 1
-            // need bonus boxes as well!!!                                                                              HERe!!!
-
-            // Creating card money div and pic
-            newDiv = document.createElement("div");
-            newDiv.setAttribute("class", "component-money");
-            newItem = document.createElement("img");
-            newItem.setAttribute("class", "card-picture");
-            newItem.setAttribute("src", "images/money_bag.png");
-            newItem.setAttribute("alt", "Cost");
-            newDiv.appendChild(newItem);
-            componentCard.appendChild(newDiv);
-            // Creating section cost div and paragraph
-            newDiv = document.createElement("div");
-            newDiv.setAttribute("class", "component-cost");
-            newItem = document.createElement("p");
-            newText = document.createTextNode(components[card]["cost"]);
-            newItem.appendChild(newText);
-            newDiv.appendChild(newItem);
-            componentCard.appendChild(newDiv);
-            //Creating section misc and paragraph
-            newDiv = document.createElement("div");
-            newDiv.setAttribute("class", "component-misc");
-            newItem = document.createElement("p");
-            newText = document.createTextNode(components[card]["misc_2"]);
-            newItem.appendChild(newText);
-            newDiv.appendChild(newItem);
-            componentCard.appendChild(newDiv);
-
-            // Adding card to main-grid
-            document.querySelector('#main-grid').appendChild(componentCard);
         }
+    }     
 
-        
+    // Creating component card holder
+    let componentCardDiv = ""
+    if(runView == true){
+        screenCover = document.createElement("div");
+        screenCover.setAttribute("id", "screen-cover");
+        componentCardDiv = document.createElement("div");
+        componentCardDiv.setAttribute("id", "component-card-holder");
+        // Adding card holder to main-grid
+        screenCover.appendChild(componentCardDiv);
+        document.querySelector('#main-grid').appendChild(screenCover);
+        // Creating event card is not clicked
+        document.getElementById("component-card-holder").addEventListener("click", closeView);
+        document.getElementById("screen-cover").addEventListener("click", closeView);
     }
-    
 
+    // For loop to check whether each slot needs a card to be created to view
+    for(let slot = 1; slot < 3; slot++){
+        if(sections[sectionSelection]["slot_" + dr + "-" + slot + "_amount"] == "slot"){
+            let card = document.getElementById(location + number + "dr-" + dr + "-dd_slot" + slot).value;
+            // Check if dropdown has a value
+            if(card != ""){
+                // Creating component card
+                componentCard = document.createElement("div");
+                componentCard.setAttribute("class", "component-card card");
+                // Creating component pic div and image
+                newDiv = document.createElement("div");
+                newDiv.setAttribute("class", "component-pic");
+                newItem = document.createElement("img");
+                newItem.setAttribute("class", "card-picture");
+                newItem.setAttribute("src", "images/" + components[card]["type"] + ".png");
+                newItem.setAttribute("alt", components[card]["type"]);
+                newDiv.appendChild(newItem);
+                componentCard.appendChild(newDiv);
+                // Creating component name div, paragraph and text
+                newDiv = document.createElement("div");
+                newDiv.setAttribute("class", "component-name");
+                newItem = document.createElement("p");
+                newText = document.createTextNode(card);
+                newItem.appendChild(newText);
+                newDiv.appendChild(newItem);
+                componentCard.appendChild(newDiv);
+                //  Creating tier div, paragraph and text
+                newDiv = document.createElement("div");
+                newDiv.setAttribute("class", "component-tier");
+                newItem = document.createElement("p");
+                newText = document.createTextNode(components[card]["tier"]);
+                newItem.appendChild(newText);
+                newDiv.appendChild(newItem);
+                componentCard.appendChild(newDiv);
+                // Creating card systems div, paragraph and text
+                newDiv = document.createElement("div");
+                newDiv.setAttribute("class", "component-systems");
+                // For loop for each system
+                for(let i = 1; i < 7; i++){
+                    if("system_" + i != ""){
+                        // Code to add systems
+                        newSystemDiv = document.createElement("div");
+                        newItem = document.createElement("label");
+                        newItem.setAttribute("class", "system-box-label");
+                        newText = document.createTextNode(components[card]["system_" + i]);
+                        newItem.appendChild(newText);
+                        // For loop for adding checkboxs for each system box required
+                        for(let j = 0; j < components[card]["system_" + i + "_amount"]; j++){
+                            newBox = document.createElement("input");
+                            newBox.setAttribute("class", "box");
+                            newBox.setAttribute("type", "checkbox");
+                            newItem.appendChild(newBox);
+                        }
+                        newSystemDiv.appendChild(newItem);
+                        newDiv.appendChild(newSystemDiv);
+                    }
+                }
+                // Adding Misc 1 ability
+                newSystemDiv = document.createElement("div");
+                newItem = document.createElement("p");
+                newText = document.createTextNode(components[card]["misc_1"]);
+                newItem.appendChild(newText);
+                newSystemDiv.appendChild(newItem);
+                newDiv.appendChild(newSystemDiv);
+                componentCard.appendChild(newDiv); 
+
+                // need bonus boxes as well!!!                                                                              HERe!!!
+
+                // Creating card money div and pic
+                newDiv = document.createElement("div");
+                newDiv.setAttribute("class", "component-money");
+                newItem = document.createElement("img");
+                newItem.setAttribute("class", "card-picture");
+                newItem.setAttribute("src", "images/money_bag.png");
+                newItem.setAttribute("alt", "Cost");
+                newDiv.appendChild(newItem);
+                componentCard.appendChild(newDiv);
+                // Creating section cost div and paragraph
+                newDiv = document.createElement("div");
+                newDiv.setAttribute("class", "component-cost");
+                newItem = document.createElement("p");
+                newText = document.createTextNode(components[card]["cost"]);
+                newItem.appendChild(newText);
+                newDiv.appendChild(newItem);
+                componentCard.appendChild(newDiv);
+                //Creating section misc and paragraph
+                newDiv = document.createElement("div");
+                newDiv.setAttribute("class", "component-misc");
+                newItem = document.createElement("p");
+                newText = document.createTextNode(components[card]["misc_2"]);
+                newItem.appendChild(newText);
+                newDiv.appendChild(newItem);
+                componentCard.appendChild(newDiv);
+                componentCardDiv.appendChild(componentCard);
+            }
+        }
+    }
 }
 
+// Closing view card function
+function closeView(e){
+    // Ensuring children of div do not trigger closing
+    if (e.target !== this){
+        return; // Do nothing
+    }
+    else{
+        // Removing screen-cover and all child elements
+        let element = document.getElementById("screen-cover");
+        element.innerHTML = '';
+        element.remove();
+    }
+}
 
 // Assigning plus buttons
 document.getElementById("fore-button-plus").addEventListener("click",a=>{addSection("fore")});

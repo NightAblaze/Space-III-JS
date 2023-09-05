@@ -276,7 +276,8 @@ td{
     'section-money section-misc section-misc section-misc'
     'section-cost section-misc section-misc section-misc';
     grid-template-columns: 15% 55% 20% 10%;
-    grid-template-rows: auto auto auto auto auto auto auto auto ;
+    grid-template-rows: auto auto auto auto auto auto auto 15%;
+    height: 300px;
 }
 
 .section-pic{grid-area: section-pic;}
@@ -301,3 +302,51 @@ td{
 .section-money{grid-area: section-money;}
 .section-cost{grid-area: section-cost;}
 .section-misc{grid-area: section-misc;}
+
+#component-card-holder{
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 45%;
+    height: 300px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#screen-cover{
+    position: fixed;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.component-card{
+    display: grid;
+    grid-template-areas: 'component-pic component-name component-tier'
+    'component-systems component-systems component-systems'
+    'component-money component-misc component-misc'
+    'component-cost component-misc component-misc';
+    grid-template-columns: 15% 65% 20%;
+    grid-template-rows: auto 55% auto 15%;
+    height: 300px;
+    width: 48%;
+}
+
+.component-pic{grid-area: component-pic;}
+.component-name{grid-area: component-name;}
+.component-tier{grid-area: component-tier;}
+.component-systems{grid-area: component-systems;}
+.component-money{grid-area: component-money;}
+.component-cost{grid-area: component-cost;}
+.component-misc{grid-area: component-misc;}
+
+.box{
+    
+}
+
