@@ -527,7 +527,7 @@ function updateCard(e){
     newDiv.appendChild(newItem);
     contents.appendChild(newDiv);
     
-    // need a function to check for frame specials in # damage region!!!
+    // need a function to check for frame specials in # damage region!!!               HERE!!!!
     
     // still to do/finish
     location + number + "dr-5-contents"
@@ -666,6 +666,35 @@ function refreshFrame(){
         document.getElementById("frame-signal-text").innerHTML = frames[frameSelection]["signal base"];
         document.getElementById("frame-signal-actual-text").innerHTML = frames[frameSelection]["signal base"];
         document.getElementById("frame-misc-text").innerHTML = frames[frameSelection]["misc"];
+
+        // Frame specialty selection
+        switch (frames[frameSelection]["code"]){
+            case "A":
+                frameChangeA()
+                break;
+            case "B":
+                frameChangeA()
+                frameChangeB()
+                break;
+            case "C":
+                frameChangeA()
+                frameChangeC()
+                break;
+            case "D":
+                frameChangeA()
+                frameChangeD()
+                break;
+            case "E":
+                frameChangeA()
+                frameChangeE()
+                break;
+            case "F":
+                frameChangeA()
+                frameChangeF()
+                break;
+        }
+        
+        let location = frames[frameSelection]["var2"];
     }
 }
 
@@ -818,6 +847,272 @@ function closeView(e){
         element.remove();
     }
 }
+
+// Frame change option A: None
+function frameChangeA(){
+    let frameSelection = document.getElementById("frame-name-dd").value;
+
+    allSections = [foreSectionsIDs, midSectionsIDs, coreSectionsIDs, aftSectionsIDs]
+    allLocations = ["fore", "mid", "core", "aft"]
+
+    for(let j = 0; j < allSections.length; j++){
+        let IDs = allSections[j];
+        let location = allLocations[j]
+        
+        for(let i = 0; i < IDs.length; i++){
+            // Clearing previous entry
+            document.getElementById(location + IDs[i] + "dr-5-contents").innerHTML = "";
+            let contents = document.querySelector("#" + location + IDs[i] + "dr-5-contents");
+            let sectionSelection = document.getElementById(location + IDs[i] + "section-name-dd").value;
+        
+            if(sectionSelection != ""){
+                // Code to add ExDam damage in # region 
+                newDiv = document.createElement("div");
+                newItem = document.createElement("label");
+                newItem.setAttribute("class", "system-box-label");
+                newText = document.createTextNode(sections[sectionSelection]["slot_#"]);
+                newItem.appendChild(newText);
+                // For loop for adding checkboxs for each system box required
+                for(let i = 0; i < sections[sectionSelection]["slot_#_amount"]; i++){
+                    newBox = document.createElement("input");
+                    newBox.setAttribute("id", location + number + "dr-5" + sections[sectionSelection]["slot_#"] + "box"+ i);
+                    newBox.setAttribute("class", "box");
+                    newBox.setAttribute("type", "checkbox");
+                    newItem.appendChild(newBox);
+                }
+                newDiv.appendChild(newItem);
+                contents.appendChild(newDiv);
+            }
+
+            // Removes any view buttons
+            document.getElementById(location + IDs[i] + "dr-5-view").innerHTML = ""
+            
+        }
+    }
+}
+
+// Frame change option B: All X sections gains a Y slot in the # damage region
+function frameChangeB(){
+    let frameSelection = document.getElementById("frame-name-dd").value;
+    let location = frames[frameSelection]["var2"];
+    let type = frames[frameSelection]["var1"];
+    let IDs = ""
+    switch (location){
+        case "fore":
+            IDs = foreSectionsIDs
+            break;
+        case "mid":
+            IDs = midSectionsIDs
+            break;
+        case "core":
+            IDs = coreSectionsIDs
+            break;
+        case "aft":
+            IDs = aftSectionsIDs
+            break;
+    }
+    
+    for(let i = 0; i < IDs.length; i++){
+        // Clearing previous entry
+        document.getElementById(location + IDs[i] + "dr-5-contents").innerHTML = "";
+        let contents = document.querySelector("#" + location + IDs[i] + "dr-5-contents");
+        let sectionSelection = document.getElementById(location + IDs[i] + "section-name-dd").value;
+        
+        // code to add dropdown limited to type and a label just before
+        newDiv = document.createElement("div");
+        newDiv.setAttribute("class", "section-card-div");
+        newParaDiv = document.createElement("div");
+        newParaDiv.setAttribute("class", "section-card-label-div");
+        newSelectionDiv = document.createElement("div");
+        newSelectionDiv.setAttribute("class", "section-card-selection-div");
+        newItem = document.createElement("p");
+        newItem.setAttribute("class", "selection-label");
+        newItem.setAttribute("id", location + IDs[i] + "dr-5-selection-label");
+        newParaDiv.appendChild(newItem);
+        newSelect = document.createElement("select");
+        newSelect.setAttribute("class", "section-card-selection");
+        newSelect.setAttribute("name", "section-name-dd");
+        newSelect.setAttribute("id", location + IDs[i] + "dr-5-dd");
+        el = document.createElement("option");
+        el.setAttribute("value", "");
+        el.setAttribute("selected", true);
+        el.setAttribute("disabled", true);
+        el.setAttribute("hidden", true);
+        newSelect.appendChild(el);
+
+        // Applying dropdown to section dr's depending on type
+        switch (type){
+            case "Power":
+                newText = document.createTextNode("Power");
+                newItem.appendChild(newText);
+                // document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Power";
+                for(let i = 0; i < powerOptions.length; i++) {
+                    let opt = powerOptions[i];
+                    let el = document.createElement("option");
+                    el.textContent = opt;
+                    el.value = opt;
+                    newSelect.appendChild(el);
+                }
+                break;
+            case "Defence":
+                newText = document.createTextNode("Defence");
+                newItem.appendChild(newText);
+                // document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Defence";
+                for(let i = 0; i < defenceOptions.length; i++) {
+                    let opt = defenceOptions[i];
+                    let el = document.createElement("option");
+                    el.textContent = opt;
+                    el.value = opt;
+                    newSelect.appendChild(el);
+                }
+                break;
+            case "Utility":
+                newText = document.createTextNode("Utility");
+                newItem.appendChild(newText);
+                // document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Utiliy";
+                for(let i = 0; i < utilityOptions.length; i++) {
+                    let opt = utilityOptions[i];
+                    let el = document.createElement("option");
+                    el.textContent = opt;
+                    el.value = opt;
+                    newSelect.appendChild(el);
+                }
+                break;
+            case "Light Weapon":
+                newText = document.createTextNode("Light Weapon");
+                newItem.appendChild(newText);
+                // document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Light Weapon";
+                for(let i = 0; i < lghWeaponOptions.length; i++) {
+                    let opt = lghWeaponOptions[i];
+                    let el = document.createElement("option");
+                    el.textContent = opt;
+                    el.value = opt;
+                    newSelect.appendChild(el);
+                }
+                break;
+            case "Heavy Weapon":
+                newText = document.createTextNode("Heavy Weapon");
+                newItem.appendChild(newText);
+                // document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Heavy Weapon";
+                for(let i = 0; i < hvyWeaponOptions.length; i++) {
+                    let opt = hvyWeaponOptions[i];
+                    let el = document.createElement("option");
+                    el.textContent = opt;
+                    el.value = opt;
+                    newSelect.appendChild(el);
+                }
+                break;
+            }
+        newSelectionDiv.appendChild(newSelect);
+        newDiv.appendChild(newParaDiv);
+        newDiv.appendChild(newSelectionDiv);
+        contents.appendChild(newDiv);
+
+        if(sectionSelection != ""){
+            // Code to add ExDam damage in # region 
+            newDiv = document.createElement("div");
+            newItem = document.createElement("label");
+            newItem.setAttribute("class", "system-box-label");
+            newText = document.createTextNode(sections[sectionSelection]["slot_#"]);
+            newItem.appendChild(newText);
+            // For loop for adding checkboxs for each system box required
+            for(let i = 0; i < sections[sectionSelection]["slot_#_amount"]; i++){
+                newBox = document.createElement("input");
+                newBox.setAttribute("id", location + number + "dr-5" + sections[sectionSelection]["slot_#"] + "box"+ i);
+                newBox.setAttribute("class", "box");
+                newBox.setAttribute("type", "checkbox");
+                newItem.appendChild(newBox);
+            }
+            newDiv.appendChild(newItem);
+            contents.appendChild(newDiv);
+        }
+
+        // Adds the view button
+        document.getElementById(location + IDs[i] + "dr-5-view").innerHTML = ""
+                
+        let viewBut = document.querySelector("#" + location + IDs[i] + "dr-5-view");
+        newItem = document.createElement("button");
+        newItem.setAttribute("class", "small-button");
+        newItem.setAttribute("id", location + IDs[i] + "dr-5-view-button");
+        newPic = document.createElement("img");
+        newPic.setAttribute("class", "button-image");
+        newPic.setAttribute("src", "images/magnifying_glass.jpg");
+        newPic.setAttribute("alt", "View");
+        newItem.appendChild(newPic);
+        viewBut.appendChild(newItem);
+
+        // Assigning the view button
+        document.getElementById(location + IDs[i] + "dr-5-view-button").addEventListener("click", view, false);
+    }
+}
+
+// Frame change option F: All X sections gains a Y system in the # damage region
+function frameChangeF(){
+    let frameSelection = document.getElementById("frame-name-dd").value;
+    let location = frames[frameSelection]["var2"];
+    let type = frames[frameSelection]["var1"];
+    let amount = frames[frameSelection]["var3"];
+    let IDs = ""
+    switch (location){
+        case "fore":
+            IDs = foreSectionsIDs
+            break;
+        case "mid":
+            IDs = midSectionsIDs
+            break;
+        case "core":
+            IDs = coreSectionsIDs
+            break;
+        case "aft":
+            IDs = aftSectionsIDs
+            break;
+    }
+    
+    for(let i = 0; i < IDs.length; i++){
+        // Clearing previous entry
+        document.getElementById(location + IDs[i] + "dr-5-contents").innerHTML = "";
+        let contents = document.querySelector("#" + location + IDs[i] + "dr-5-contents");
+        let sectionSelection = document.getElementById(location + IDs[i] + "section-name-dd").value;
+        
+        // Code to add non slot damage in # region 
+        newDiv = document.createElement("div");
+        newItem = document.createElement("label");
+        newItem.setAttribute("class", "system-box-label");
+        newText = document.createTextNode(type);
+        newItem.appendChild(newText);
+        // For loop for adding checkboxs for each system box required
+        for(let j = 0; j < amount; j++){
+            newBox = document.createElement("input");
+            newBox.setAttribute("id", location + IDs[i] + "dr-5" + type + "box"+ i);
+            newBox.setAttribute("class", "box");
+            newBox.setAttribute("type", "checkbox");
+            newItem.appendChild(newBox);
+        }
+        newDiv.appendChild(newItem);
+        contents.appendChild(newDiv);
+        
+        if(sectionSelection != ""){
+            // Code to add ExDam damage in # region 
+            newDiv = document.createElement("div");
+            newItem = document.createElement("label");
+            newItem.setAttribute("class", "system-box-label");
+            newText = document.createTextNode(sections[sectionSelection]["slot_#"]);
+            newItem.appendChild(newText);
+            // For loop for adding checkboxs for each system box required
+            for(let i = 0; i < sections[sectionSelection]["slot_#_amount"]; i++){
+                newBox = document.createElement("input");
+                newBox.setAttribute("id", location + number + "dr-5" + sections[sectionSelection]["slot_#"] + "box"+ i);
+                newBox.setAttribute("class", "box");
+                newBox.setAttribute("type", "checkbox");
+                newItem.appendChild(newBox);
+            }
+            newDiv.appendChild(newItem);
+            contents.appendChild(newDiv);
+        }
+    }
+}
+        
+
 
 // Assigning plus buttons
 document.getElementById("fore-button-plus").addEventListener("click",a=>{addSection("fore")});
