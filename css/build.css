@@ -110,6 +110,28 @@ label{
     flex-direction: column;
 }
 
+.bonus{
+    background-color: white;
+    width: 95%;
+    margin-top: 5px;
+    border: 4px;
+    border-style: solid;
+    border-radius: 7px;
+}
+
+.bonus>div{
+    margin: 1px;
+    border: 2px;
+    border-style: solid;
+    border-radius: 3px;
+    padding: 2px;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+}
+
 #frame-pic{grid-area: frame-pic;}
 #frame-name{grid-area: frame-name;}
 #frame-tier{grid-area: frame-tier;}
@@ -276,8 +298,8 @@ td{
     'section-money section-misc section-misc section-misc'
     'section-cost section-misc section-misc section-misc';
     grid-template-columns: 15% 55% 20% 10%;
-    grid-template-rows: auto auto auto auto auto auto auto 15%;
-    height: 300px;
+    grid-template-rows: auto auto auto auto auto auto auto 10%;
+    height: 350px;
 }
 
 .section-pic{grid-area: section-pic;}
@@ -309,7 +331,7 @@ td{
     top: 50%;
     transform: translate(-50%, -50%);
     width: 45%;
-    height: 300px;
+    height: 350px;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -333,8 +355,8 @@ td{
     'component-money component-misc component-misc'
     'component-cost component-misc component-misc';
     grid-template-columns: 15% 65% 20%;
-    grid-template-rows: auto 55% auto 15%;
-    height: 300px;
+    grid-template-rows: auto 60% auto 10%;
+    height: 350px;
     width: 48%;
 }
 
