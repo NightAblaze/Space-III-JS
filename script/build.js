@@ -354,7 +354,7 @@ function updateCard(e){
         for(let slot = 1; slot < 3; slot++){
             if(sections[sectionSelection]["slot_" + dr + "-" + slot + "_amount"] == "slot"){
 
-                // code to add dropdown limited to type and a label just before
+                // Code to add dropdown limited to type and a label just before
                 newDiv = document.createElement("div");
                 newDiv.setAttribute("class", "section-card-div");
                 newParaDiv = document.createElement("div");
@@ -519,12 +519,32 @@ function updateCard(e){
     }
     newDiv.appendChild(newItem);
     contents.appendChild(newDiv);
+
+    // Clearing # view
+    document.getElementById(location + number + "dr-5-view").innerHTML = ""
     
-    // need a function to check for frame specials in # damage region!!!               HERE!!!!
-    
-    // still to do/finish
-    location + number + "dr-5-contents"
-    location + number + "dr-5-view"
+    // working on a function to check for frame specials in # damage region!!!               HERE!!!!
+
+    // Add frame speciality to the section
+    let frameSelection = document.getElementById("frame-name-dd").value;
+    switch (frames[frameSelection]["code"]){
+        case "A":
+            break;
+        case "B":
+            sectionChangeB(location, number)
+            break;
+        case "C":
+            sectionChangeC(location, number)
+            break;
+        case "D":
+            break;
+        case "E":
+            sectionChangeE(location, number)
+            break;
+        case "F":
+            sectionChangeF(location, number)
+            break;
+    }
 
     document.getElementById(location + number + "section-cost").innerHTML = sections[sectionSelection]["cost"];
     document.getElementById(location + number + "section-misc").innerHTML = sections[sectionSelection]["misc"];
@@ -705,18 +725,13 @@ function view(e){
 
     // For loop to check whether at least one slot has a value
     let runView = false;
-    if(dr == 5){
-        runView = true;
-    }
-    else{
-        for(let slot = 1; slot < 3; slot++){
-            if(sections[sectionSelection]["slot_" + dr + "-" + slot + "_amount"] == "slot"){
-                if(document.getElementById(location + number + "dr-" + dr + "-dd_slot" + slot).value != ""){
-                    runView = true;
-                }
+    for(let slot = 1; slot < 3; slot++){
+        if(sections[sectionSelection]["slot_" + dr + "-" + slot + "_amount"] == "slot"){
+            if(document.getElementById(location + number + "dr-" + dr + "-dd_slot" + slot).value != ""){
+                runView = true;
             }
         }
-    }     
+    }       
 
     // Creating component card holder
     let componentCardDiv = ""
@@ -732,11 +747,6 @@ function view(e){
         document.getElementById("component-card-holder").addEventListener("click", closeView);
         document.getElementById("screen-cover").addEventListener("click", closeView);
     }
-
-
-    // NEED TO FIX FOR DR 5 (ie when extra selection added)
-
-
 
     // For loop to check whether each slot needs a card to be created to view
     for(let slot = 1; slot < 3; slot++){
@@ -837,6 +847,125 @@ function view(e){
     }
 }
 
+function view5(e){
+    // Gets the section number, damage region and section location of the view button pressed
+    let number = e.currentTarget.id.replace(/\D/g,"");
+    number = number.slice(0,-1);
+    let dr = e.currentTarget.id.replace(/\D/g,"");
+    dr = dr.slice(-1, dr.length);
+    let location =  e.currentTarget.id.replace(number + "dr-" + dr + "-view-button","");
+    number = parseInt(number, 10)
+    dr = parseInt(dr, 10)
+
+    let sectionSelection = document.getElementById(location + number + "section-name-dd").value;
+    let card = document.getElementById(location + number + "dr-" + dr + "-dd").value;
+
+    // Check if dropdown has a value
+    if(card != ""){
+        // Creating component card holder
+        let componentCardDiv = ""
+        screenCover = document.createElement("div");
+        screenCover.setAttribute("id", "screen-cover");
+        componentCardDiv = document.createElement("div");
+        componentCardDiv.setAttribute("id", "component-card-holder");
+        // Adding card holder to main-grid
+        screenCover.appendChild(componentCardDiv);
+        document.querySelector('#main-grid').appendChild(screenCover);
+        // Creating event card is not clicked
+        document.getElementById("component-card-holder").addEventListener("click", closeView);
+        document.getElementById("screen-cover").addEventListener("click", closeView);
+
+        // Creating component card
+        componentCard = document.createElement("div");
+        componentCard.setAttribute("class", "component-card card");
+        // Creating component pic div and image
+        newDiv = document.createElement("div");
+        newDiv.setAttribute("class", "component-pic");
+        newItem = document.createElement("img");
+        newItem.setAttribute("class", "card-picture");
+        newItem.setAttribute("src", "images/" + components[card]["type"] + ".png");
+        newItem.setAttribute("alt", components[card]["type"]);
+        newDiv.appendChild(newItem);
+        componentCard.appendChild(newDiv);
+        // Creating component name div, paragraph and text
+        newDiv = document.createElement("div");
+        newDiv.setAttribute("class", "component-name");
+        newItem = document.createElement("p");
+        newText = document.createTextNode(card);
+        newItem.appendChild(newText);
+        newDiv.appendChild(newItem);
+        componentCard.appendChild(newDiv);
+        //  Creating tier div, paragraph and text
+        newDiv = document.createElement("div");
+        newDiv.setAttribute("class", "component-tier");
+        newItem = document.createElement("p");
+        newText = document.createTextNode(components[card]["tier"]);
+        newItem.appendChild(newText);
+        newDiv.appendChild(newItem);
+        componentCard.appendChild(newDiv);
+        // Creating card systems div, paragraph and text
+        newDiv = document.createElement("div");
+        newDiv.setAttribute("class", "component-systems");
+        // For loop for each system
+        for(let i = 1; i < 7; i++){
+            if("system_" + i != ""){
+                // Code to add systems
+                newSystemDiv = document.createElement("div");
+                newItem = document.createElement("label");
+                newItem.setAttribute("class", "system-box-label");
+                newText = document.createTextNode(components[card]["system_" + i]);
+                newItem.appendChild(newText);
+                // For loop for adding checkboxs for each system box required
+                for(let j = 0; j < components[card]["system_" + i + "_amount"]; j++){
+                    newBox = document.createElement("input");
+                    newBox.setAttribute("class", "box");
+                    newBox.setAttribute("type", "checkbox");
+                    newItem.appendChild(newBox);
+                }
+                newSystemDiv.appendChild(newItem);
+                newDiv.appendChild(newSystemDiv);
+            }
+        }
+        // Adding Misc 1 ability
+        newSystemDiv = document.createElement("div");
+        newItem = document.createElement("p");
+        newText = document.createTextNode(components[card]["misc_1"]);
+        newItem.appendChild(newText);
+        newSystemDiv.appendChild(newItem);
+        newDiv.appendChild(newSystemDiv);
+        componentCard.appendChild(newDiv); 
+
+        // need bonus boxes as well!!!                                                                              HERe!!!
+
+        // Creating card money div and pic
+        newDiv = document.createElement("div");
+        newDiv.setAttribute("class", "component-money");
+        newItem = document.createElement("img");
+        newItem.setAttribute("class", "card-picture");
+        newItem.setAttribute("src", "images/money_bag.png");
+        newItem.setAttribute("alt", "Cost");
+        newDiv.appendChild(newItem);
+        componentCard.appendChild(newDiv);
+        // Creating section cost div and paragraph
+        newDiv = document.createElement("div");
+        newDiv.setAttribute("class", "component-cost");
+        newItem = document.createElement("p");
+        newText = document.createTextNode(components[card]["cost"]);
+        newItem.appendChild(newText);
+        newDiv.appendChild(newItem);
+        componentCard.appendChild(newDiv);
+        //Creating section misc and paragraph
+        newDiv = document.createElement("div");
+        newDiv.setAttribute("class", "component-misc");
+        newItem = document.createElement("p");
+        newText = document.createTextNode(components[card]["misc_2"]);
+        newItem.appendChild(newText);
+        newDiv.appendChild(newItem);
+        componentCard.appendChild(newDiv);
+        componentCardDiv.appendChild(componentCard);
+    }
+}
+
 // Closing view card function
 function closeView(e){
     // Ensuring children of div do not trigger closing
@@ -851,7 +980,7 @@ function closeView(e){
     }
 }
 
-// Frame change option A: None
+// Frame change option A: None (Resetting cards to default)
 function frameChangeA(){
     let frameSelection = document.getElementById("frame-name-dd").value;
 
@@ -860,7 +989,7 @@ function frameChangeA(){
 
     for(let j = 0; j < allSections.length; j++){
         let IDs = allSections[j];
-        let location = allLocations[j]
+        let location = allLocations[j];
 
         // Clearing location bonus'
         document.getElementById(location + "-bonus").innerHTML = "";
@@ -889,12 +1018,12 @@ function frameChangeA(){
                             newSelectionDiv.setAttribute("class", "section-card-selection-div");
                             newItem = document.createElement("p");
                             newItem.setAttribute("class", "selection-label");
-                            newItem.setAttribute("id", location + number + "dr-" + dr + "selection-label");
+                            newItem.setAttribute("id", location + IDs[i] + "dr-" + dr + "selection-label");
                             newParaDiv.appendChild(newItem);
                             newSelect = document.createElement("select");
                             newSelect.setAttribute("class", "section-card-selection");
                             newSelect.setAttribute("name", "section-name-dd");
-                            newSelect.setAttribute("id", location + number + "dr-" + dr + "-dd_slot" + slot);
+                            newSelect.setAttribute("id", location + IDs[i] + "dr-" + dr + "-dd_slot" + slot);
                             el = document.createElement("option");
                             el.setAttribute("value", "");
                             el.setAttribute("selected", true);
@@ -998,7 +1127,7 @@ function frameChangeA(){
                             // For loop for adding checkboxs for each system box required
                             for(let k = 0; k < sections[sectionSelection]["slot_" + dr + "-" + slot + "_amount"]; k++){
                                 newBox = document.createElement("input");
-                                newBox.setAttribute("id", location + number + "dr-" + dr + sections[sectionSelection]["slot_" + dr + "-" + slot] + "box"+ k);
+                                newBox.setAttribute("id", location + IDs[i] + "dr-" + dr + sections[sectionSelection]["slot_" + dr + "-" + slot] + "box"+ k);
                                 newBox.setAttribute("class", "box");
                                 newBox.setAttribute("type", "checkbox");
                                 newItem.appendChild(newBox);
@@ -1024,7 +1153,7 @@ function frameChangeA(){
                 // For loop for adding checkboxs for each system box required
                 for(let k = 0; k < sections[sectionSelection]["slot_5-1_amount"]; k++){
                     newBox = document.createElement("input");
-                    newBox.setAttribute("id", location + number + "dr-5" + sections[sectionSelection]["slot_5-1"] + "box"+ k);
+                    newBox.setAttribute("id", location + IDs[i] + "dr-5" + sections[sectionSelection]["slot_5-1"] + "box"+ k);
                     newBox.setAttribute("class", "box");
                     newBox.setAttribute("type", "checkbox");
                     newItem.appendChild(newBox);
@@ -1094,7 +1223,6 @@ function frameChangeB(){
             case "Power":
                 newText = document.createTextNode("Power");
                 newItem.appendChild(newText);
-                // document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Power";
                 for(let j = 0; j < powerOptions.length; j++) {
                     let opt = powerOptions[j];
                     let el = document.createElement("option");
@@ -1106,7 +1234,6 @@ function frameChangeB(){
             case "Defence":
                 newText = document.createTextNode("Defence");
                 newItem.appendChild(newText);
-                // document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Defence";
                 for(let j = 0; j < defenceOptions.length; j++) {
                     let opt = defenceOptions[j];
                     let el = document.createElement("option");
@@ -1118,7 +1245,6 @@ function frameChangeB(){
             case "Utility":
                 newText = document.createTextNode("Utility");
                 newItem.appendChild(newText);
-                // document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Utiliy";
                 for(let j = 0; j < utilityOptions.length; j++) {
                     let opt = utilityOptions[j];
                     let el = document.createElement("option");
@@ -1130,7 +1256,6 @@ function frameChangeB(){
             case "Light Weapon":
                 newText = document.createTextNode("Light Weapon");
                 newItem.appendChild(newText);
-                // document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Light Weapon";
                 for(let j = 0; j < lghWeaponOptions.length; j++) {
                     let opt = lghWeaponOptions[j];
                     let el = document.createElement("option");
@@ -1142,7 +1267,6 @@ function frameChangeB(){
             case "Heavy Weapon":
                 newText = document.createTextNode("Heavy Weapon");
                 newItem.appendChild(newText);
-                // document.getElementById(location + number + "dr-" + dr + "selection-label").innerHTML = "Heavy Weapon";
                 for(let j = 0; j < hvyWeaponOptions.length; j++) {
                     let opt = hvyWeaponOptions[j];
                     let el = document.createElement("option");
@@ -1167,7 +1291,7 @@ function frameChangeB(){
             // For loop for adding checkboxs for each system box required
             for(let j = 0; j < sections[sectionSelection]["slot_5-1_amount"]; j++){
                 newBox = document.createElement("input");
-                newBox.setAttribute("id", location + number + "dr-5" + sections[sectionSelection]["slot_5-1"] + "box"+ j);
+                newBox.setAttribute("id", location + IDs[i] + "dr-5" + sections[sectionSelection]["slot_5-1"] + "box"+ j);
                 newBox.setAttribute("class", "box");
                 newBox.setAttribute("type", "checkbox");
                 newItem.appendChild(newBox);
@@ -1191,9 +1315,10 @@ function frameChangeB(){
         viewBut.appendChild(newItem);
 
         // Assigning the view button
-        document.getElementById(location + IDs[i] + "dr-5-view-button").addEventListener("click", view, false);
+        document.getElementById(location + IDs[i] + "dr-5-view-button").addEventListener("click", view5, false);
     }
 }
+
 // Frame change option C: All Z slots in the X location provides + Y
 function frameChangeC(){
     let frameSelection = document.getElementById("frame-name-dd").value;
@@ -1375,7 +1500,7 @@ function frameChangeC(){
                             // For loop for adding checkboxs for each system box required
                             for(let k = 0; k < sections[sectionSelection]["slot_" + j + "-" + slot + "_amount"]; k++){
                                 newBox = document.createElement("input");
-                                newBox.setAttribute("id", location + number + "dr-" + j + sections[sectionSelection]["slot_" + j + "-" + slot] + "box"+ k);
+                                newBox.setAttribute("id", location + IDs[i] + "dr-" + j + sections[sectionSelection]["slot_" + j + "-" + slot] + "box"+ k);
                                 newBox.setAttribute("class", "box");
                                 newBox.setAttribute("type", "checkbox");
                                 newItem.appendChild(newBox);
@@ -1536,6 +1661,62 @@ function frameChangeD(){
     }
 }
 
+// Frame change option E: Each section gains X in the # damage region
+function frameChangeE(){
+    let frameSelection = document.getElementById("frame-name-dd").value;
+    let type = frames[frameSelection]["var1"];
+    let amount = frames[frameSelection]["var3"];
+    let allSections = [foreSectionsIDs, midSectionsIDs, coreSectionsIDs, aftSectionsIDs]
+    let allLocations = ["fore", "mid", "core", "aft"]
+
+    for(let j = 0; j < allSections.length; j++){
+        let IDs = allSections[j];
+        let location = allLocations[j];
+
+        for(let i = 0; i < IDs.length; i++){
+            // Clearing previous entry
+            document.getElementById(location + IDs[i] + "dr-5-contents").innerHTML = "";
+            let contents = document.querySelector("#" + location + IDs[i] + "dr-5-contents");
+            let sectionSelection = document.getElementById(location + IDs[i] + "section-name-dd").value;
+
+            // Code to add non slot damage region 
+            newDiv = document.createElement("div");
+            newItem = document.createElement("label");
+            newItem.setAttribute("class", "system-box-label");
+            newText = document.createTextNode(type);
+            newItem.appendChild(newText);
+            // For loop for adding checkboxs for each system box required
+            for(let k = 0; k < amount; k++){
+                newBox = document.createElement("input");
+                newBox.setAttribute("id", location + IDs[i] + "bonus" + type + "box"+ k);
+                newBox.setAttribute("class", "box");
+                newBox.setAttribute("type", "checkbox");
+                newItem.appendChild(newBox);
+            }
+            newDiv.appendChild(newItem);
+            contents.appendChild(newDiv);
+        
+            if(sectionSelection != ""){
+                // Code to add ExDam damage in # region 
+                newDiv = document.createElement("div");
+                newItem = document.createElement("label");
+                newItem.setAttribute("class", "system-box-label");
+                newText = document.createTextNode(sections[sectionSelection]["slot_5-1"]);
+                newItem.appendChild(newText);
+                // For loop for adding checkboxs for each system box required
+                for(let k = 0; k < sections[sectionSelection]["slot_5-1_amount"]; k++){
+                    newBox = document.createElement("input");
+                    newBox.setAttribute("id", location + IDs[i] + "dr-5" + sections[sectionSelection]["slot_5-1"] + "box"+ k);
+                    newBox.setAttribute("class", "box");
+                    newBox.setAttribute("type", "checkbox");
+                    newItem.appendChild(newBox);
+                }
+                newDiv.appendChild(newItem);
+                contents.appendChild(newDiv);
+            }
+        }
+    }
+}
 
 // Frame change option F: All X sections gains a Y system in the # damage region
 function frameChangeF(){
@@ -1592,7 +1773,7 @@ function frameChangeF(){
             // For loop for adding checkboxs for each system box required
             for(let j = 0; j < sections[sectionSelection]["slot_5-1_amount"]; j++){
                 newBox = document.createElement("input");
-                newBox.setAttribute("id", location + number + "dr-5" + sections[sectionSelection]["slot_5-1"] + "box"+ j);
+                newBox.setAttribute("id", location + IDs[i] + "dr-5" + sections[sectionSelection]["slot_5-1"] + "box"+ j);
                 newBox.setAttribute("class", "box");
                 newBox.setAttribute("type", "checkbox");
                 newItem.appendChild(newBox);
@@ -1616,3 +1797,416 @@ document.getElementById("fore-button-minus").addEventListener("click",a=>{remove
 document.getElementById("mid-button-minus").addEventListener("click",a=>{removeSection("mid", Math.max.apply(null, midSectionsIDs))});
 document.getElementById("core-button-minus").addEventListener("click",a=>{removeSection("core", Math.max.apply(null, coreSectionsIDs))});
 document.getElementById("aft-button-minus").addEventListener("click",a=>{removeSection("aft", Math.max.apply(null, aftSectionsIDs))});
+
+// Section change option B: All X sections gains a Y slot in the # damage region
+function sectionChangeB(sectionLocation, sectionID){
+    let frameSelection = document.getElementById("frame-name-dd").value;
+    let location = frames[frameSelection]["var2"];
+    let type = frames[frameSelection]["var1"];
+
+
+    if(sectionLocation == location){
+        // Clearing previous entry
+        document.getElementById(location + sectionID + "dr-5-contents").innerHTML = "";
+        let contents = document.querySelector("#" + location + sectionID + "dr-5-contents");
+        let sectionSelection = document.getElementById(location + sectionID + "section-name-dd").value;
+        
+        // code to add dropdown limited to type and a label just before
+        newDiv = document.createElement("div");
+        newDiv.setAttribute("class", "section-card-div");
+        newParaDiv = document.createElement("div");
+        newParaDiv.setAttribute("class", "section-card-label-div");
+        newSelectionDiv = document.createElement("div");
+        newSelectionDiv.setAttribute("class", "section-card-selection-div");
+        newItem = document.createElement("p");
+        newItem.setAttribute("class", "selection-label");
+        newItem.setAttribute("id", location + sectionID + "dr-5-selection-label");
+        newParaDiv.appendChild(newItem);
+        newSelect = document.createElement("select");
+        newSelect.setAttribute("class", "section-card-selection");
+        newSelect.setAttribute("name", "section-name-dd");
+        newSelect.setAttribute("id", location + sectionID + "dr-5-dd");
+        el = document.createElement("option");
+        el.setAttribute("value", "");
+        el.setAttribute("selected", true);
+        el.setAttribute("disabled", true);
+        el.setAttribute("hidden", true);
+        newSelect.appendChild(el);
+
+        // Applying dropdown to section dr's depending on type
+        switch (type){
+            case "Power":
+                newText = document.createTextNode("Power");
+                newItem.appendChild(newText);
+                for(let j = 0; j < powerOptions.length; j++) {
+                    let opt = powerOptions[j];
+                    let el = document.createElement("option");
+                    el.textContent = opt;
+                    el.value = opt;
+                    newSelect.appendChild(el);
+                }
+                break;
+            case "Defence":
+                newText = document.createTextNode("Defence");
+                newItem.appendChild(newText);
+                for(let j = 0; j < defenceOptions.length; j++) {
+                    let opt = defenceOptions[j];
+                    let el = document.createElement("option");
+                    el.textContent = opt;
+                    el.value = opt;
+                    newSelect.appendChild(el);
+                }
+                break;
+            case "Utility":
+                newText = document.createTextNode("Utility");
+                newItem.appendChild(newText);
+                for(let j = 0; j < utilityOptions.length; j++) {
+                    let opt = utilityOptions[j];
+                    let el = document.createElement("option");
+                    el.textContent = opt;
+                    el.value = opt;
+                    newSelect.appendChild(el);
+                }
+                break;
+            case "Light Weapon":
+                newText = document.createTextNode("Light Weapon");
+                newItem.appendChild(newText);
+                for(let j = 0; j < lghWeaponOptions.length; j++) {
+                    let opt = lghWeaponOptions[j];
+                    let el = document.createElement("option");
+                    el.textContent = opt;
+                    el.value = opt;
+                    newSelect.appendChild(el);
+                }
+                break;
+            case "Heavy Weapon":
+                newText = document.createTextNode("Heavy Weapon");
+                newItem.appendChild(newText);
+                for(let j = 0; j < hvyWeaponOptions.length; j++) {
+                    let opt = hvyWeaponOptions[j];
+                    let el = document.createElement("option");
+                    el.textContent = opt;
+                    el.value = opt;
+                    newSelect.appendChild(el);
+                }
+                break;
+            }
+        newSelectionDiv.appendChild(newSelect);
+        newDiv.appendChild(newParaDiv);
+        newDiv.appendChild(newSelectionDiv);
+        contents.appendChild(newDiv);
+
+        // Code to add ExDam damage in # region 
+        newDiv = document.createElement("div");
+        newItem = document.createElement("label");
+        newItem.setAttribute("class", "system-box-label");
+        newText = document.createTextNode(sections[sectionSelection]["slot_5-1"]);
+        newItem.appendChild(newText);
+        // For loop for adding checkboxs for each system box required
+        for(let j = 0; j < sections[sectionSelection]["slot_5-1_amount"]; j++){
+            newBox = document.createElement("input");
+            newBox.setAttribute("id", location + sectionID + "dr-5" + sections[sectionSelection]["slot_5-1"] + "box"+ j);
+            newBox.setAttribute("class", "box");
+            newBox.setAttribute("type", "checkbox");
+            newItem.appendChild(newBox);
+        }
+        newDiv.appendChild(newItem);
+        contents.appendChild(newDiv);
+
+        // Adds the view button
+        document.getElementById(location + sectionID + "dr-5-view").innerHTML = ""
+                
+        let viewBut = document.querySelector("#" + location + sectionID + "dr-5-view");
+        newItem = document.createElement("button");
+        newItem.setAttribute("class", "small-button");
+        newItem.setAttribute("id", location + sectionID + "dr-5-view-button");
+        newPic = document.createElement("img");
+        newPic.setAttribute("class", "button-image");
+        newPic.setAttribute("src", "images/magnifying_glass.jpg");
+        newPic.setAttribute("alt", "View");
+        newItem.appendChild(newPic);
+        viewBut.appendChild(newItem);
+
+        // Assigning the view button
+        document.getElementById(location + sectionID + "dr-5-view-button").addEventListener("click", view5, false);
+    }
+}
+
+// Section change option C: All Z slots in the X location provides + Y
+function sectionChangeC(sectionLocation, sectionID){
+    let frameSelection = document.getElementById("frame-name-dd").value;
+    let location = frames[frameSelection]["var2"];
+    let type = frames[frameSelection]["var1"];
+    let amount = frames[frameSelection]["var3"];
+    let slotType1 = frames[frameSelection]["var4"];
+    let slotType2 = frames[frameSelection]["var5"];
+   
+
+    if(location == sectionLocation){
+        // Checking if a damage region contains the slotType
+        let sectionSelection = document.getElementById(location + sectionID + "section-name-dd").value;
+        
+        for(let j = 1; j < 5; j++){
+            let count = 0;
+            if(sections[sectionSelection]["slot_" + j + "-1"] == slotType1 || sections[sectionSelection]["slot_" + j + "-1"] == slotType2){
+                count++
+            }
+            if(sections[sectionSelection]["slot_" + j + "-2"] == slotType1 || sections[sectionSelection]["slot_" + j + "-2"] == slotType2){
+                count++
+            }
+
+            if(count > 0){
+                // Clearing previous entry
+                let contents = document.querySelector("#" + location + sectionID + "dr-" + j + "-contents");
+                document.getElementById(location + sectionID + "dr-" + j + "-contents").innerHTML = "";
+                
+                // Code to add non slot damage in damage region 
+                newDiv = document.createElement("div");
+                newItem = document.createElement("label");
+                newItem.setAttribute("class", "system-box-label");
+                newText = document.createTextNode(type);
+                newItem.appendChild(newText);
+                // For loop for adding checkboxs for each system box required
+                for(let k = 0; k < count * amount; k++){
+                    newBox = document.createElement("input");
+                    newBox.setAttribute("id", location + sectionID + "dr-" + j + type + "box"+ k);
+                    newBox.setAttribute("class", "box");
+                    newBox.setAttribute("type", "checkbox");
+                    newItem.appendChild(newBox);
+                }
+                newDiv.appendChild(newItem);
+                contents.appendChild(newDiv);
+
+                // For loop for different slots in each damage region
+                for(let slot = 1; slot < 3; slot++){
+                    if(sections[sectionSelection]["slot_" + j + "-" + slot + "_amount"] == "slot"){
+
+                        // code to add dropdown limited to type and a label just before
+                        newDiv = document.createElement("div");
+                        newDiv.setAttribute("class", "section-card-div");
+                        newParaDiv = document.createElement("div");
+                        newParaDiv.setAttribute("class", "section-card-label-div");
+                        newSelectionDiv = document.createElement("div");
+                        newSelectionDiv.setAttribute("class", "section-card-selection-div");
+                        newItem = document.createElement("p");
+                        newItem.setAttribute("class", "selection-label");
+                        newItem.setAttribute("id", location + sectionID + "dr-" + j + "selection-label");
+                        newParaDiv.appendChild(newItem);
+                        newSelect = document.createElement("select");
+                        newSelect.setAttribute("class", "section-card-selection");
+                        newSelect.setAttribute("name", "section-name-dd");
+                        newSelect.setAttribute("id", location + sectionID + "dr-" + j + "-dd_slot" + slot);
+                        el = document.createElement("option");
+                        el.setAttribute("value", "");
+                        el.setAttribute("selected", true);
+                        el.setAttribute("disabled", true);
+                        el.setAttribute("hidden", true);
+                        newSelect.appendChild(el);
+
+                        // Applying dropdown to section dr's depending on type
+                        switch (sections[sectionSelection]["slot_" + j + "-" + slot]){
+                            case "Power":
+                                newText = document.createTextNode("Power");
+                                newItem.appendChild(newText);
+                                for(let k = 0; k < powerOptions.length; k++) {
+                                    let opt = powerOptions[k];
+                                    let el = document.createElement("option");
+                                    el.textContent = opt;
+                                    el.value = opt;
+                                    newSelect.appendChild(el);
+                                }
+                                break;
+                            case "Defence":
+                                newText = document.createTextNode("Defence");
+                                newItem.appendChild(newText);
+                                for(let k = 0; k < defenceOptions.length; k++) {
+                                    let opt = defenceOptions[k];
+                                    let el = document.createElement("option");
+                                    el.textContent = opt;
+                                    el.value = opt;
+                                    newSelect.appendChild(el);
+                                }
+                                break;
+                            case "Utility":
+                                newText = document.createTextNode("Utility");
+                                newItem.appendChild(newText);
+                                for(let k = 0; k < utilityOptions.length; k++) {
+                                    let opt = utilityOptions[k];
+                                    let el = document.createElement("option");
+                                    el.textContent = opt;
+                                    el.value = opt;
+                                    newSelect.appendChild(el);
+                                }
+                                break;
+                            case "Light Weapon":
+                                newText = document.createTextNode("Light Weapon");
+                                newItem.appendChild(newText);
+                                for(let k = 0; k < lghWeaponOptions.length; k++) {
+                                    let opt = lghWeaponOptions[k];
+                                    let el = document.createElement("option");
+                                    el.textContent = opt;
+                                    el.value = opt;
+                                    newSelect.appendChild(el);
+                                }
+                                break;
+                            case "Heavy Weapon":
+                                newText = document.createTextNode("Heavy Weapon");
+                                newItem.appendChild(newText);
+                                for(let k = 0; k < hvyWeaponOptions.length; k++) {
+                                    let opt = hvyWeaponOptions[k];
+                                    let el = document.createElement("option");
+                                    el.textContent = opt;
+                                    el.value = opt;
+                                    newSelect.appendChild(el);
+                                }
+                                break;
+                            case "Defence Armour":
+                                newText = document.createTextNode("Defence Armour");
+                                newItem.appendChild(newText);
+                                for(let k = 0; k < defArmourOptions.length; k++) {
+                                    let opt = defArmourOptions[k];
+                                    let el = document.createElement("option");
+                                    el.textContent = opt;
+                                    el.value = opt;
+                                    newSelect.appendChild(el);
+                                }
+                                break;
+                            case "Defence Shield":
+                                newText = document.createTextNode("Defence Shield");
+                                newItem.appendChild(newText);
+                                for(let k = 0; k < defShieldOptions.length; k++) {
+                                    let opt = defShieldOptions[k];
+                                    let el = document.createElement("option");
+                                    el.textContent = opt;
+                                    el.value = opt;
+                                    newSelect.appendChild(el);
+                                }
+                                break;
+                        }
+                        newSelectionDiv.appendChild(newSelect);
+                        newDiv.appendChild(newParaDiv);
+                        newDiv.appendChild(newSelectionDiv);
+                        contents.appendChild(newDiv);
+                    }
+                    
+                    else{
+                        // Code to add non slot damage region 
+                        newDiv = document.createElement("div");
+                        newItem = document.createElement("label");
+                        newItem.setAttribute("class", "system-box-label");
+                        newText = document.createTextNode(sections[sectionSelection]["slot_" + j + "-" + slot]);
+                        newItem.appendChild(newText);
+                        // For loop for adding checkboxs for each system box required
+                        for(let k = 0; k < sections[sectionSelection]["slot_" + j + "-" + slot + "_amount"]; k++){
+                            newBox = document.createElement("input");
+                            newBox.setAttribute("id", location + sectionID + "dr-" + j + sections[sectionSelection]["slot_" + j + "-" + slot] + "box"+ k);
+                            newBox.setAttribute("class", "box");
+                            newBox.setAttribute("type", "checkbox");
+                            newItem.appendChild(newBox);
+                        }
+                        newDiv.appendChild(newItem);
+                        contents.appendChild(newDiv);
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Section change option E: Each section gains X in the # damage region
+function sectionChangeE(sectionLocation, sectionID){
+    let frameSelection = document.getElementById("frame-name-dd").value;
+    let type = frames[frameSelection]["var1"];
+    let amount = frames[frameSelection]["var3"];
+    let location = sectionLocation
+
+    // Clearing previous entry
+    document.getElementById(location + sectionID + "dr-5-contents").innerHTML = "";
+    let contents = document.querySelector("#" + location + sectionID + "dr-5-contents");
+    let sectionSelection = document.getElementById(location + sectionID + "section-name-dd").value;
+
+    // Code to add non slot damage region 
+    newDiv = document.createElement("div");
+    newItem = document.createElement("label");
+    newItem.setAttribute("class", "system-box-label");
+    newText = document.createTextNode(type);
+    newItem.appendChild(newText);
+    // For loop for adding checkboxs for each system box required
+    for(let k = 0; k < amount; k++){
+        newBox = document.createElement("input");
+        newBox.setAttribute("id", location + sectionID + "bonus" + type + "box"+ k);
+        newBox.setAttribute("class", "box");
+        newBox.setAttribute("type", "checkbox");
+        newItem.appendChild(newBox);
+    }
+    newDiv.appendChild(newItem);
+    contents.appendChild(newDiv);
+
+    // Code to add ExDam damage in # region 
+    newDiv = document.createElement("div");
+    newItem = document.createElement("label");
+    newItem.setAttribute("class", "system-box-label");
+    newText = document.createTextNode(sections[sectionSelection]["slot_5-1"]);
+    newItem.appendChild(newText);
+    // For loop for adding checkboxs for each system box required
+    for(let k = 0; k < sections[sectionSelection]["slot_5-1_amount"]; k++){
+        newBox = document.createElement("input");
+        newBox.setAttribute("id", location + sectionID + "dr-5" + sections[sectionSelection]["slot_5-1"] + "box"+ k);
+        newBox.setAttribute("class", "box");
+        newBox.setAttribute("type", "checkbox");
+        newItem.appendChild(newBox);
+    }
+    newDiv.appendChild(newItem);
+    contents.appendChild(newDiv);
+}
+
+
+// Frame change option F: All X sections gains a Y system in the # damage region
+function sectionChangeF(sectionLocation, sectionID){
+    let frameSelection = document.getElementById("frame-name-dd").value;
+    let location = frames[frameSelection]["var2"];
+    let type = frames[frameSelection]["var1"];
+    let amount = frames[frameSelection]["var3"];
+
+    
+    if(location == sectionLocation){
+        // Clearing previous entry
+        document.getElementById(location + sectionID + "dr-5-contents").innerHTML = "";
+        let contents = document.querySelector("#" + location + sectionID + "dr-5-contents");
+        let sectionSelection = document.getElementById(location + sectionID + "section-name-dd").value;
+        
+        // Code to add non slot damage in # region 
+        newDiv = document.createElement("div");
+        newItem = document.createElement("label");
+        newItem.setAttribute("class", "system-box-label");
+        newText = document.createTextNode(type);
+        newItem.appendChild(newText);
+        // For loop for adding checkboxs for each system box required
+        for(let j = 0; j < amount; j++){
+            newBox = document.createElement("input");
+            newBox.setAttribute("id", location + sectionID + "dr-5" + type + "box"+ j);
+            newBox.setAttribute("class", "box");
+            newBox.setAttribute("type", "checkbox");
+            newItem.appendChild(newBox);
+        }
+        newDiv.appendChild(newItem);
+        contents.appendChild(newDiv);
+        
+        // Code to add ExDam damage in # region 
+        newDiv = document.createElement("div");
+        newItem = document.createElement("label");
+        newItem.setAttribute("class", "system-box-label");
+        newText = document.createTextNode(sections[sectionSelection]["slot_5-1"]);
+        newItem.appendChild(newText);
+        // For loop for adding checkboxs for each system box required
+        for(let j = 0; j < sections[sectionSelection]["slot_5-1_amount"]; j++){
+            newBox = document.createElement("input");
+            newBox.setAttribute("id", location + sectionID + "dr-5" + sections[sectionSelection]["slot_5-1"] + "box"+ j);
+            newBox.setAttribute("class", "box");
+            newBox.setAttribute("type", "checkbox");
+            newItem.appendChild(newBox);
+        }
+        newDiv.appendChild(newItem);
+        contents.appendChild(newDiv);
+    }
+}
