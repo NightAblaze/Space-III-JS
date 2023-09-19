@@ -5,10 +5,14 @@ coreSections = []
 aftSections = []
 
 // Sections IDs currently in use
-foreSectionsIDs = []
-midSectionsIDs = []
-coreSectionsIDs = []
-aftSectionsIDs = []
+foreSectionsIDs = [];
+midSectionsIDs = [];
+coreSectionsIDs = [];
+aftSectionsIDs = [];
+
+// Save for location bonus'
+let locationBonus = [];
+let selectionBonus = {};
 
 // Assigning section locations to variables
 const fore = document.querySelector('#fore-frame');
@@ -18,8 +22,8 @@ const aft = document.querySelector('#aft-frame');
 
 // Creating list for section and core dropdowns
 let options = Object.keys(sections);
-let coreOptions = []
-let sectionOptions = []
+let coreOptions = [];
+let sectionOptions = [];
 for(let i = 0; i < options.length; i++) {
     if(sections[options[i]]["location"] == "outer"){
         sectionOptions.push(options[i]);
@@ -523,27 +527,28 @@ function updateCard(e){
     // Clearing # view
     document.getElementById(location + number + "dr-5-view").innerHTML = ""
     
-    // working on a function to check for frame specials in # damage region!!!               HERE!!!!
 
     // Add frame speciality to the section
     let frameSelection = document.getElementById("frame-name-dd").value;
-    switch (frames[frameSelection]["code"]){
-        case "A":
-            break;
-        case "B":
-            sectionChangeB(location, number)
-            break;
-        case "C":
-            sectionChangeC(location, number)
-            break;
-        case "D":
-            break;
-        case "E":
-            sectionChangeE(location, number)
-            break;
-        case "F":
-            sectionChangeF(location, number)
-            break;
+    if(frameSelection != ""){
+        switch (frames[frameSelection]["code"]){
+            case "A":
+                break;
+            case "B":
+                sectionChangeB(location, number)
+                break;
+            case "C":
+                sectionChangeC(location, number)
+                break;
+            case "D":
+                break;
+            case "E":
+                sectionChangeE(location, number)
+                break;
+            case "F":
+                sectionChangeF(location, number)
+                break;
+        }
     }
 
     document.getElementById(location + number + "section-cost").innerHTML = sections[sectionSelection]["cost"];
@@ -984,14 +989,25 @@ function closeView(e){
 function frameChangeA(){
     let frameSelection = document.getElementById("frame-name-dd").value;
 
-    allSections = [foreSectionsIDs, midSectionsIDs, coreSectionsIDs, aftSectionsIDs]
-    allLocations = ["fore", "mid", "core", "aft"]
+    allSections = [foreSectionsIDs, midSectionsIDs, coreSectionsIDs, aftSectionsIDs];
+    allLocations = ["fore", "mid", "core", "aft"];
+
+    selectionBonus = {};
 
     for(let j = 0; j < allSections.length; j++){
         let IDs = allSections[j];
         let location = allLocations[j];
 
-        // Clearing location bonus'
+        // Saving & clearing location bonus'
+        if(document.querySelector("#" + location + "-bonus").style.display != "none"){
+            let amountBonuses = document.getElementById(location + "-bonus").getElementsByClassName("section-card-selection");
+            locationBonus = [];
+            for(let i=1; i< (amountBonuses.length + 1); i++ ){
+                selected = document.getElementById(location + i + "bonus").value;
+                locationBonus.push(selected);
+                
+            }
+        }  
         document.getElementById(location + "-bonus").innerHTML = "";
         document.querySelector("#" + location + "-bonus").style.display = "none";
         
@@ -1001,7 +1017,15 @@ function frameChangeA(){
             if(sectionSelection != ""){
                 // Code to replace all damage regions
                 for(let dr = 1; dr < 5; dr++){
-                    // Clearing previous entry
+                    // Saving & clearing previous entry
+                    let componentSelection = {};
+                    if(sections[sectionSelection]["slot_" + dr + "-1_amount"] == "slot"){
+                        componentSelection[location + IDs[i] + "dr-" + dr + "-dd_slot1"] = document.getElementById(location + IDs[i] + "dr-" + dr + "-dd_slot1").value;
+                    }
+                    if(sections[sectionSelection]["slot_" + dr + "-2_amount"] == "slot"){
+                        componentSelection[location + IDs[i] + "dr-" + dr + "-dd_slot2"] = document.getElementById(location + IDs[i] + "dr-" + dr + "-dd_slot1").value;
+                    }
+
                     let contents = document.querySelector("#" + location + IDs[i] + "dr-" + dr + "-contents");
                     document.getElementById(location + IDs[i] + "dr-" + dr + "-contents").innerHTML = "";
 
@@ -1115,6 +1139,9 @@ function frameChangeA(){
                             newDiv.appendChild(newParaDiv);
                             newDiv.appendChild(newSelectionDiv);
                             contents.appendChild(newDiv);
+
+                            // Adding previous selections back in
+                            document.getElementById(location + IDs[i] + "dr-" + dr + "-dd_slot" + slot).value = componentSelection[location + IDs[i] + "dr-" + dr + "-dd_slot" + slot];
                         }
                     
                         else{
@@ -1139,7 +1166,11 @@ function frameChangeA(){
                 }
             }
 
-            // Clearing previous # entry
+            // Saving & clearing previous # entry
+            let elementExists = document.getElementById(location + IDs[i] + "dr-5-dd"); 
+            if(elementExists != null){
+                selectionBonus[location + IDs[i] + "dr-5-dd"] = document.getElementById(location + IDs[i] + "dr-5-dd").value;
+            }
             document.getElementById(location + IDs[i] + "dr-5-contents").innerHTML = "";
             let contents = document.querySelector("#" + location + IDs[i] + "dr-5-contents");
             
@@ -1196,7 +1227,7 @@ function frameChangeB(){
         let contents = document.querySelector("#" + location + IDs[i] + "dr-5-contents");
         let sectionSelection = document.getElementById(location + IDs[i] + "section-name-dd").value;
         
-        // code to add dropdown limited to type and a label just before
+        // Code to add dropdown limited to type and a label just before
         newDiv = document.createElement("div");
         newDiv.setAttribute("class", "section-card-div");
         newParaDiv = document.createElement("div");
@@ -1280,6 +1311,9 @@ function frameChangeB(){
         newDiv.appendChild(newParaDiv);
         newDiv.appendChild(newSelectionDiv);
         contents.appendChild(newDiv);
+
+        // Adding previous selections back in
+        document.getElementById(location + IDs[i] + "dr-5-dd").value = selectionBonus[location + IDs[i] + "dr-5-dd"];
 
         if(sectionSelection != ""){
             // Code to add ExDam damage in # region 
@@ -1517,7 +1551,7 @@ function frameChangeC(){
 }
 
 
-// Frame change option D: For every Y sections (rounds up) gain an X in the Z section
+// Frame change option D: For every Y sections (rounds up) gain an X in the Z location
 function frameChangeD(){
     let frameSelection = document.getElementById("frame-name-dd").value;
     let location = frames[frameSelection]["var2"];
@@ -1541,7 +1575,7 @@ function frameChangeD(){
             newSelectionDiv.setAttribute("class", "section-card-selection-div");
             newItem = document.createElement("p");
             newItem.setAttribute("class", "selection-label");
-            newItem.setAttribute("id", location + j + "bonus");
+            newItem.setAttribute("id", location + j + "bonus-label");
             newParaDiv.appendChild(newItem);
             newSelect = document.createElement("select");
             newSelect.setAttribute("class", "section-card-selection");
@@ -1638,6 +1672,9 @@ function frameChangeD(){
             newDiv.appendChild(newParaDiv);
             newDiv.appendChild(newSelectionDiv);
             contents.appendChild(newDiv);
+
+            // Adding previous selections back in
+            document.getElementById(location + j + "bonus").value = locationBonus[j-1];
         }
 
         else{
@@ -1783,7 +1820,6 @@ function frameChangeF(){
         }
     }
 }
-        
 
 
 // Assigning plus buttons
@@ -2161,7 +2197,7 @@ function sectionChangeE(sectionLocation, sectionID){
 }
 
 
-// Frame change option F: All X sections gains a Y system in the # damage region
+// Section change option F: All X sections gains a Y system in the # damage region
 function sectionChangeF(sectionLocation, sectionID){
     let frameSelection = document.getElementById("frame-name-dd").value;
     let location = frames[frameSelection]["var2"];
