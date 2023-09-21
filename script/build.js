@@ -1,14 +1,11 @@
-
-foreSections = []
-midSections = []
-coreSections = []
-aftSections = []
+let ship = {};
+let shipSave = {};
 
 // Sections IDs currently in use
-foreSectionsIDs = [];
-midSectionsIDs = [];
-coreSectionsIDs = [];
-aftSectionsIDs = [];
+let foreSectionsIDs = [];
+let midSectionsIDs = [];
+let coreSectionsIDs = [];
+let aftSectionsIDs = [];
 
 // Save for location bonus'
 let locationBonus = [];
@@ -305,22 +302,18 @@ function addSection(location){
     // Adding section to correct location and updating section number of that location and adding number to IDs in use list
     switch (location){
         case "fore":
-            foreSections.push(newSection);
             fore.appendChild(newSection);
             document.getElementById("fore-sections-number").innerHTML++;
             break;
         case "mid":
-            midSections.push(newSection);
             mid.appendChild(newSection);
             document.getElementById("mid-sections-number").innerHTML++;
             break;
         case "core":
-            coreSections.push(newSection);
             core.appendChild(newSection);
             document.getElementById("core-sections-number").innerHTML++;
             break;
         case "aft":
-            aftSections.push(newSection);
             aft.appendChild(newSection);
             document.getElementById("aft-sections-number").innerHTML++;
             break;
@@ -759,6 +752,7 @@ function view(e){
             let card = document.getElementById(location + number + "dr-" + dr + "-dd_slot" + slot).value;
             // Check if dropdown has a value
             if(card != ""){
+
                 // Creating component card
                 componentCard = document.createElement("div");
                 componentCard.setAttribute("class", "component-card card");
@@ -817,9 +811,34 @@ function view(e){
                 newItem.appendChild(newText);
                 newSystemDiv.appendChild(newItem);
                 newDiv.appendChild(newSystemDiv);
-                componentCard.appendChild(newDiv); 
 
-                // need bonus boxes as well!!!                                                                              HERe!!!
+                // Adding Bonus ability
+                if(components[card]["bonus"] != ""){
+                    newSystemDiv = document.createElement("div");
+                    newItem = document.createElement("p");
+                    switch (components[card]["bonustype"]){
+                        case "Armour":
+                            newText = document.createTextNode(components[card]["bonus"]);
+                            newItem.appendChild(newText);                       
+                            break;
+                        case "Warp":
+                        case "Apr":
+                            newText = document.createTextNode("+ ");
+                            newItem.appendChild(newText);
+                            for(let j = 0; j < components[card]["bonus1"]; j++){
+                                newBox = document.createElement("input");
+                                newBox.setAttribute("class", "box");
+                                newBox.setAttribute("type", "checkbox");
+                                newItem.appendChild(newBox);
+                            }
+                            newText = document.createTextNode(" " + components[card]["bonustype"] + " if in " + components[card]["bonus2"]);
+                            newItem.appendChild(newText); 
+                            break;
+                    }
+                    newSystemDiv.appendChild(newItem);
+                    newDiv.appendChild(newSystemDiv);
+                }
+                componentCard.appendChild(newDiv);
 
                 // Creating card money div and pic
                 newDiv = document.createElement("div");
@@ -940,7 +959,33 @@ function view5(e){
         newDiv.appendChild(newSystemDiv);
         componentCard.appendChild(newDiv); 
 
-        // need bonus boxes as well!!!                                                                              HERe!!!
+        // Adding Bonus ability
+        if(components[card]["bonus"] != ""){
+            newSystemDiv = document.createElement("div");
+            newItem = document.createElement("p");
+            switch (components[card]["bonustype"]){
+                case "Armour":
+                    newText = document.createTextNode(components[card]["bonus"]);
+                    newItem.appendChild(newText);                       
+                    break;
+                case "Warp":
+                case "Apr":
+                    newText = document.createTextNode("+ ");
+                    newItem.appendChild(newText);
+                    for(let j = 0; j < components[card]["bonus1"]; j++){
+                        newBox = document.createElement("input");
+                        newBox.setAttribute("class", "box");
+                        newBox.setAttribute("type", "checkbox");
+                        newItem.appendChild(newBox);
+                    }
+                    newText = document.createTextNode(" " + components[card]["bonustype"] + " if in " + components[card]["bonus2"]);
+                    newItem.appendChild(newText); 
+                    break;
+            }
+            newSystemDiv.appendChild(newItem);
+            newDiv.appendChild(newSystemDiv);
+        }
+        componentCard.appendChild(newDiv);
 
         // Creating card money div and pic
         newDiv = document.createElement("div");
@@ -1023,7 +1068,7 @@ function frameChangeA(){
                         componentSelection[location + IDs[i] + "dr-" + dr + "-dd_slot1"] = document.getElementById(location + IDs[i] + "dr-" + dr + "-dd_slot1").value;
                     }
                     if(sections[sectionSelection]["slot_" + dr + "-2_amount"] == "slot"){
-                        componentSelection[location + IDs[i] + "dr-" + dr + "-dd_slot2"] = document.getElementById(location + IDs[i] + "dr-" + dr + "-dd_slot1").value;
+                        componentSelection[location + IDs[i] + "dr-" + dr + "-dd_slot2"] = document.getElementById(location + IDs[i] + "dr-" + dr + "-dd_slot2").value;
                     }
 
                     let contents = document.querySelector("#" + location + IDs[i] + "dr-" + dr + "-contents");
@@ -1227,95 +1272,95 @@ function frameChangeB(){
         let contents = document.querySelector("#" + location + IDs[i] + "dr-5-contents");
         let sectionSelection = document.getElementById(location + IDs[i] + "section-name-dd").value;
         
-        // Code to add dropdown limited to type and a label just before
-        newDiv = document.createElement("div");
-        newDiv.setAttribute("class", "section-card-div");
-        newParaDiv = document.createElement("div");
-        newParaDiv.setAttribute("class", "section-card-label-div");
-        newSelectionDiv = document.createElement("div");
-        newSelectionDiv.setAttribute("class", "section-card-selection-div");
-        newItem = document.createElement("p");
-        newItem.setAttribute("class", "selection-label");
-        newItem.setAttribute("id", location + IDs[i] + "dr-5-selection-label");
-        newParaDiv.appendChild(newItem);
-        newSelect = document.createElement("select");
-        newSelect.setAttribute("class", "section-card-selection");
-        newSelect.setAttribute("name", "section-name-dd");
-        newSelect.setAttribute("id", location + IDs[i] + "dr-5-dd");
-        el = document.createElement("option");
-        el.setAttribute("value", "");
-        el.setAttribute("selected", true);
-        el.setAttribute("disabled", true);
-        el.setAttribute("hidden", true);
-        newSelect.appendChild(el);
-
-        // Applying dropdown to section dr's depending on type
-        switch (type){
-            case "Power":
-                newText = document.createTextNode("Power");
-                newItem.appendChild(newText);
-                for(let j = 0; j < powerOptions.length; j++) {
-                    let opt = powerOptions[j];
-                    let el = document.createElement("option");
-                    el.textContent = opt;
-                    el.value = opt;
-                    newSelect.appendChild(el);
-                }
-                break;
-            case "Defence":
-                newText = document.createTextNode("Defence");
-                newItem.appendChild(newText);
-                for(let j = 0; j < defenceOptions.length; j++) {
-                    let opt = defenceOptions[j];
-                    let el = document.createElement("option");
-                    el.textContent = opt;
-                    el.value = opt;
-                    newSelect.appendChild(el);
-                }
-                break;
-            case "Utility":
-                newText = document.createTextNode("Utility");
-                newItem.appendChild(newText);
-                for(let j = 0; j < utilityOptions.length; j++) {
-                    let opt = utilityOptions[j];
-                    let el = document.createElement("option");
-                    el.textContent = opt;
-                    el.value = opt;
-                    newSelect.appendChild(el);
-                }
-                break;
-            case "Light Weapon":
-                newText = document.createTextNode("Light Weapon");
-                newItem.appendChild(newText);
-                for(let j = 0; j < lghWeaponOptions.length; j++) {
-                    let opt = lghWeaponOptions[j];
-                    let el = document.createElement("option");
-                    el.textContent = opt;
-                    el.value = opt;
-                    newSelect.appendChild(el);
-                }
-                break;
-            case "Heavy Weapon":
-                newText = document.createTextNode("Heavy Weapon");
-                newItem.appendChild(newText);
-                for(let j = 0; j < hvyWeaponOptions.length; j++) {
-                    let opt = hvyWeaponOptions[j];
-                    let el = document.createElement("option");
-                    el.textContent = opt;
-                    el.value = opt;
-                    newSelect.appendChild(el);
-                }
-                break;
-            }
-        newSelectionDiv.appendChild(newSelect);
-        newDiv.appendChild(newParaDiv);
-        newDiv.appendChild(newSelectionDiv);
-        contents.appendChild(newDiv);
-
-        // Adding previous selections back in
-        document.getElementById(location + IDs[i] + "dr-5-dd").value = selectionBonus[location + IDs[i] + "dr-5-dd"];
-
         if(sectionSelection != ""){
+            // Code to add dropdown limited to type and a label just before
+            newDiv = document.createElement("div");
+            newDiv.setAttribute("class", "section-card-div");
+            newParaDiv = document.createElement("div");
+            newParaDiv.setAttribute("class", "section-card-label-div");
+            newSelectionDiv = document.createElement("div");
+            newSelectionDiv.setAttribute("class", "section-card-selection-div");
+            newItem = document.createElement("p");
+            newItem.setAttribute("class", "selection-label");
+            newItem.setAttribute("id", location + IDs[i] + "dr-5-selection-label");
+            newParaDiv.appendChild(newItem);
+            newSelect = document.createElement("select");
+            newSelect.setAttribute("class", "section-card-selection");
+            newSelect.setAttribute("name", "section-name-dd");
+            newSelect.setAttribute("id", location + IDs[i] + "dr-5-dd");
+            el = document.createElement("option");
+            el.setAttribute("value", "");
+            el.setAttribute("selected", true);
+            el.setAttribute("disabled", true);
+            el.setAttribute("hidden", true);
+            newSelect.appendChild(el);
+
+            // Applying dropdown to section dr's depending on type
+            switch (type){
+                case "Power":
+                    newText = document.createTextNode("Power");
+                    newItem.appendChild(newText);
+                    for(let j = 0; j < powerOptions.length; j++) {
+                        let opt = powerOptions[j];
+                        let el = document.createElement("option");
+                        el.textContent = opt;
+                        el.value = opt;
+                        newSelect.appendChild(el);
+                    }
+                    break;
+                case "Defence":
+                    newText = document.createTextNode("Defence");
+                    newItem.appendChild(newText);
+                    for(let j = 0; j < defenceOptions.length; j++) {
+                        let opt = defenceOptions[j];
+                        let el = document.createElement("option");
+                        el.textContent = opt;
+                        el.value = opt;
+                        newSelect.appendChild(el);
+                    }
+                    break;
+                case "Utility":
+                    newText = document.createTextNode("Utility");
+                    newItem.appendChild(newText);
+                    for(let j = 0; j < utilityOptions.length; j++) {
+                        let opt = utilityOptions[j];
+                        let el = document.createElement("option");
+                        el.textContent = opt;
+                        el.value = opt;
+                        newSelect.appendChild(el);
+                    }
+                    break;
+                case "Light Weapon":
+                    newText = document.createTextNode("Light Weapon");
+                    newItem.appendChild(newText);
+                    for(let j = 0; j < lghWeaponOptions.length; j++) {
+                        let opt = lghWeaponOptions[j];
+                        let el = document.createElement("option");
+                        el.textContent = opt;
+                        el.value = opt;
+                        newSelect.appendChild(el);
+                    }
+                    break;
+                case "Heavy Weapon":
+                    newText = document.createTextNode("Heavy Weapon");
+                    newItem.appendChild(newText);
+                    for(let j = 0; j < hvyWeaponOptions.length; j++) {
+                        let opt = hvyWeaponOptions[j];
+                        let el = document.createElement("option");
+                        el.textContent = opt;
+                        el.value = opt;
+                        newSelect.appendChild(el);
+                    }
+                    break;
+                }
+            newSelectionDiv.appendChild(newSelect);
+            newDiv.appendChild(newParaDiv);
+            newDiv.appendChild(newSelectionDiv);
+            contents.appendChild(newDiv);
+
+            // Adding previous selections back in
+            document.getElementById(location + IDs[i] + "dr-5-dd").value = selectionBonus[location + IDs[i] + "dr-5-dd"];
+
             // Code to add ExDam damage in # region 
             newDiv = document.createElement("div");
             newItem = document.createElement("label");
@@ -1716,24 +1761,24 @@ function frameChangeE(){
             let contents = document.querySelector("#" + location + IDs[i] + "dr-5-contents");
             let sectionSelection = document.getElementById(location + IDs[i] + "section-name-dd").value;
 
-            // Code to add non slot damage region 
-            newDiv = document.createElement("div");
-            newItem = document.createElement("label");
-            newItem.setAttribute("class", "system-box-label");
-            newText = document.createTextNode(type);
-            newItem.appendChild(newText);
-            // For loop for adding checkboxs for each system box required
-            for(let k = 0; k < amount; k++){
-                newBox = document.createElement("input");
-                newBox.setAttribute("id", location + IDs[i] + "bonus" + type + "box"+ k);
-                newBox.setAttribute("class", "box");
-                newBox.setAttribute("type", "checkbox");
-                newItem.appendChild(newBox);
-            }
-            newDiv.appendChild(newItem);
-            contents.appendChild(newDiv);
-        
             if(sectionSelection != ""){
+                // Code to add non slot damage region 
+                newDiv = document.createElement("div");
+                newItem = document.createElement("label");
+                newItem.setAttribute("class", "system-box-label");
+                newText = document.createTextNode(type);
+                newItem.appendChild(newText);
+                // For loop for adding checkboxs for each system box required
+                for(let k = 0; k < amount; k++){
+                    newBox = document.createElement("input");
+                    newBox.setAttribute("id", location + IDs[i] + "bonus" + type + "box"+ k);
+                    newBox.setAttribute("class", "box");
+                    newBox.setAttribute("type", "checkbox");
+                    newItem.appendChild(newBox);
+                }
+                newDiv.appendChild(newItem);
+                contents.appendChild(newDiv);
+            
                 // Code to add ExDam damage in # region 
                 newDiv = document.createElement("div");
                 newItem = document.createElement("label");
@@ -1783,24 +1828,24 @@ function frameChangeF(){
         let contents = document.querySelector("#" + location + IDs[i] + "dr-5-contents");
         let sectionSelection = document.getElementById(location + IDs[i] + "section-name-dd").value;
         
-        // Code to add non slot damage in # region 
-        newDiv = document.createElement("div");
-        newItem = document.createElement("label");
-        newItem.setAttribute("class", "system-box-label");
-        newText = document.createTextNode(type);
-        newItem.appendChild(newText);
-        // For loop for adding checkboxs for each system box required
-        for(let j = 0; j < amount; j++){
-            newBox = document.createElement("input");
-            newBox.setAttribute("id", location + IDs[i] + "dr-5" + type + "box"+ j);
-            newBox.setAttribute("class", "box");
-            newBox.setAttribute("type", "checkbox");
-            newItem.appendChild(newBox);
-        }
-        newDiv.appendChild(newItem);
-        contents.appendChild(newDiv);
-        
         if(sectionSelection != ""){
+            // Code to add non slot damage in # region 
+            newDiv = document.createElement("div");
+            newItem = document.createElement("label");
+            newItem.setAttribute("class", "system-box-label");
+            newText = document.createTextNode(type);
+            newItem.appendChild(newText);
+            // For loop for adding checkboxs for each system box required
+            for(let j = 0; j < amount; j++){
+                newBox = document.createElement("input");
+                newBox.setAttribute("id", location + IDs[i] + "dr-5" + type + "box"+ j);
+                newBox.setAttribute("class", "box");
+                newBox.setAttribute("type", "checkbox");
+                newItem.appendChild(newBox);
+            }
+            newDiv.appendChild(newItem);
+            contents.appendChild(newDiv);
+        
             // Code to add ExDam damage in # region 
             newDiv = document.createElement("div");
             newItem = document.createElement("label");
@@ -2245,4 +2290,136 @@ function sectionChangeF(sectionLocation, sectionID){
         newDiv.appendChild(newItem);
         contents.appendChild(newDiv);
     }
+}
+
+// Function to update ship statistics
+function shipUpdate(){
+    ship = {};
+    
+    allSections = [foreSectionsIDs, midSectionsIDs, coreSectionsIDs, aftSectionsIDs];
+    allLocations = ["fore", "mid", "core", "aft"];
+
+    let frameSelection = document.getElementById("frame-name-dd").value;
+
+    for(let i = 0; i < allSections.length; i++){
+        let IDs = allSections[i];
+        let location = allLocations[i];
+
+        for(let id = 0; id < IDs.length; id++){
+            let sectionSelection = document.getElementById(location + IDs[id] + "section-name-dd").value;
+        
+            if(sectionSelection != ""){
+                // Code to check each damage regions
+                for(let dr = 1; dr < 5; dr++){
+                    // Getting components from each slot
+                    for(let slot = 1; slot < 3; slot++){
+                        // Code for getting components from a card
+                        if(sections[sectionSelection]["slot_" + dr + "-" + slot + "_amount"] == "slot"){
+                            componentCard = document.getElementById(location + IDs[id] + "dr-" + dr + "-dd_slot" + slot).value;
+                            if(componentCard = ""){
+                                ship[components[componentCard]["Hull"]] = ship[components[componentCard]["Hull"]] + 2;
+                            }
+                            else{
+                                for(let system = 1; system < 7; system++){
+                                    if(components[componentCard]["system_" + system] != ""){
+                                        ship[components[componentCard]["system_" + system]] = ship[components[componentCard]["system" + system]] + components[componentCard]["system_" + system + "_amount"]
+                                    }
+                                }
+                                if(components[componentCard]["misc_1"] != ""){
+                                    misc = components[componentCard]["misc_1"].replace(/[0-9]/g, "");
+                                    misc = misc.replace("+ ", "");
+                                    amount = components[componentCard]["misc_1"].replace(/[^0-9]/g, "");
+                                    console.log(misc);
+                                    switch (misc){
+                                        case "Armour Points":
+                                        case "Shield Points":
+                                            ship[misc] = ship[misc] + parseInt(amount, 10);
+                                            break;
+                                    }
+                                }
+                                if(components[componentCard]["bonus"] != ""){
+                                    switch (components[componentCard]["bonustype"]){
+                                        case "Armour":
+                                        // Need a function after all cards have been calculated     HERE!!!!
+                                            break;
+                                        case "Warp":
+                                        case "Apr":
+                                            if(components[componentCard]["bonus2"] == location){
+                                                ship[components[componentCard]["bonustype"]] = ship[components[componentCard]["bonustype"]] + components[componentCard]["bonus1"]
+                                            }
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+                        else{
+                        // Code to get components from non slot damage region
+                        ship[sections[sectionSelection]["slot_" + dr + "-" + slot]] = ship[sections[sectionSelection]["slot_" + dr + "-" + slot]] + sections[sectionSelection]["slot_" + dr + "-" + slot + "_amount"]
+                        }
+                    } 
+                }
+
+                // Code to get components from damage region 5
+                ship[sections[sectionSelection]["slot_5-1"]] = ship[sections[sectionSelection]["slot_5-1"]] + sections[sectionSelection]["slot_5-1_amount"]
+
+                // Code to get frame bonus'
+                switch (frames[frameSelection]["code"]){
+                    case "B":
+                        componentCard = document.getElementById(location + IDs[id] + "dr-5-dd").value;
+                        if(componentCard = ""){
+                            ship[components[componentCard]["Hull"]] = ship[components[componentCard]["Hull"]] + 2;
+                        }
+                        else{
+                            for(let system = 1; system < 7; system++){
+                                if(components[componentCard]["system_" + system] != ""){
+                                    ship[components[componentCard]["system_" + system]] = ship[components[componentCard]["system" + system]] + components[componentCard]["system_" + system + "_amount"]
+                                }
+                            }
+                            if(components[componentCard]["misc_1"] != ""){
+                                misc = components[componentCard]["misc_1"].replace(/[0-9]/g, "");
+                                misc = misc.replace("+ ", "");
+                                amount = components[componentCard]["misc_1"].replace(/[^0-9]/g, "");
+                                console.log(misc);
+                                switch (misc){
+                                    case "Armour Points":
+                                    case "Shield Points":
+                                        ship[misc] = ship[misc] + parseInt(amount, 10);
+                                        break;
+                                }
+                            }
+                            if(components[componentCard]["bonus"] != ""){
+                                switch (components[componentCard]["bonustype"]){
+                                    case "Armour":
+                                    // Need a function after all cards have been calculated     HERE!!!!
+                                        break;
+                                    case "Warp":
+                                    case "Apr":
+                                        if(components[componentCard]["bonus2"] == location){
+                                            ship[components[componentCard]["bonustype"]] = ship[components[componentCard]["bonustype"]] + components[componentCard]["bonus1"]
+                                        }
+                                        break;
+                                }
+                            }
+                        }
+                        break;
+                    case "C":
+                        frameChangeC()
+                        // Do a check when doing slots and add if applicable.
+                        break;
+                    case "E":
+                        frameChangeE()
+                        break;
+                    case "F":
+                        frameChangeF()
+                        break;
+                }
+
+
+            }
+        }
+    }
+
+    case "D":
+        frameChangeD()
+        break;
 }
