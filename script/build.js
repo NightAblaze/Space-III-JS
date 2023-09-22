@@ -1,4 +1,8 @@
-let ship = {};
+let ship = {"Hull":0, "RepK":0, "Armour Points":0, "ASG":0, "PSG":0, "LasPD":0, "FlakPD":0, "Warp":0, "Imp":0, "Apr":0, "Btty":0, "WCap":0, "AComA":0, "PComA":0, "TD":0, "ExDam":0,
+"HBore":0, "ArcC":0, "Plas-F":0, "EMine":0, "AnFC":0, "LDP":0, "Miss-L":0, "Miss-Rack":0, "Pho-R":0, "Pho-G":0, "H-RG":0, "L-RG":0, "DISR-JA":0, "DISR-C":0, "FlamSG":0,
+"Ph-2":0, "Ph-3":0, "L-IRE":0, "H-IC":0, "L-IC":0, "AC20":0, "AmLo":0, "MMS-L":0, "H-PAC":0, "L-PAC":0, "TBC":0, "Plas-D":0, "HAE":0, "LAE":0,
+"TracB":0, "TracEx":0, "ManT":0, "RepB":0, "Cargo":0, "ConHard":0, "SMG":0, "SenAr":0, "Mining Laser":0, "Mineral Scanner":0, "Miss-Fab":0, "AmFab":0, "DamCU":0};
+
 let shipSave = {};
 
 // Sections IDs currently in use
@@ -329,6 +333,8 @@ function addSection(location){
     // Assigning listener to dropdown selection
     document.getElementById(location + number + "section-name-dd").addEventListener("change", updateCard, false);
 
+    // Update ship totals
+    shipUpdate()
 }
 
 // Finds the location and number of the section clicked then runs updates the card
@@ -457,6 +463,9 @@ function updateCard(e){
                 newDiv.appendChild(newParaDiv);
                 newDiv.appendChild(newSelectionDiv);
                 contents.appendChild(newDiv);
+
+                // Assigning listener to dropdown selection
+                document.getElementById(location + number + "dr-" + dr + "-dd_slot" + slot).addEventListener("change", shipUpdate, false);
             }
         
             else{
@@ -519,7 +528,6 @@ function updateCard(e){
 
     // Clearing # view
     document.getElementById(location + number + "dr-5-view").innerHTML = ""
-    
 
     // Add frame speciality to the section
     let frameSelection = document.getElementById("frame-name-dd").value;
@@ -546,6 +554,9 @@ function updateCard(e){
 
     document.getElementById(location + number + "section-cost").innerHTML = sections[sectionSelection]["cost"];
     document.getElementById(location + number + "section-misc").innerHTML = sections[sectionSelection]["misc"];
+
+    // Update ship totals
+    shipUpdate()
 }
 
 // Finds the location and number of the section clicked then runs removeSection function
@@ -625,6 +636,9 @@ function removeSection(location, number){
         coreLimits();
         refreshFrame();
     }
+
+    // Update ship totals
+    shipUpdate()
 }
 
 addSection("fore");
@@ -707,6 +721,9 @@ function refreshFrame(){
         
         let location = frames[frameSelection]["var2"];
     }
+
+    // Update ship totals
+    shipUpdate()
 }
 
 function view(e){
@@ -1185,6 +1202,9 @@ function frameChangeA(){
                             newDiv.appendChild(newSelectionDiv);
                             contents.appendChild(newDiv);
 
+                            // Assigning listener to dropdown selection
+                            document.getElementById(location + IDs[i] + "dr-" + dr + "-dd_slot" + slot).addEventListener("change", shipUpdate, false);
+
                             // Adding previous selections back in
                             document.getElementById(location + IDs[i] + "dr-" + dr + "-dd_slot" + slot).value = componentSelection[location + IDs[i] + "dr-" + dr + "-dd_slot" + slot];
                         }
@@ -1357,6 +1377,9 @@ function frameChangeB(){
             newDiv.appendChild(newParaDiv);
             newDiv.appendChild(newSelectionDiv);
             contents.appendChild(newDiv);
+
+            // Assigning listener to dropdown selection
+            document.getElementById(location + IDs[i] + "dr-5-dd").addEventListener("change", shipUpdate, false);
 
             // Adding previous selections back in
             document.getElementById(location + IDs[i] + "dr-5-dd").value = selectionBonus[location + IDs[i] + "dr-5-dd"];
@@ -1567,6 +1590,9 @@ function frameChangeC(){
                             newDiv.appendChild(newParaDiv);
                             newDiv.appendChild(newSelectionDiv);
                             contents.appendChild(newDiv);
+
+                            // Assigning listener to dropdown selection
+                            document.getElementById(location + number + "dr-" + j + "-dd_slot" + slot).addEventListener("change", shipUpdate, false);
                         }
                     
                         else{
@@ -1588,7 +1614,6 @@ function frameChangeC(){
                             contents.appendChild(newDiv);
                         }
                     }
-
                 }
             }
         }
@@ -1717,6 +1742,9 @@ function frameChangeD(){
             newDiv.appendChild(newParaDiv);
             newDiv.appendChild(newSelectionDiv);
             contents.appendChild(newDiv);
+
+            // Assigning listener to dropdown selection
+            document.getElementById(location + j + "bonus").addEventListener("change", shipUpdate, false);
 
             // Adding previous selections back in
             document.getElementById(location + j + "bonus").value = locationBonus[j-1];
@@ -1977,6 +2005,9 @@ function sectionChangeB(sectionLocation, sectionID){
         newDiv.appendChild(newSelectionDiv);
         contents.appendChild(newDiv);
 
+        // Assigning listener to dropdown selection
+        document.getElementById(location + sectionID + "dr-5-dd").addEventListener("change", shipUpdate, false);
+
         // Code to add ExDam damage in # region 
         newDiv = document.createElement("div");
         newItem = document.createElement("label");
@@ -2168,6 +2199,9 @@ function sectionChangeC(sectionLocation, sectionID){
                         newDiv.appendChild(newParaDiv);
                         newDiv.appendChild(newSelectionDiv);
                         contents.appendChild(newDiv);
+
+                        // Assigning listener to dropdown selection
+                        document.getElementById(location + sectionID + "dr-" + j + "-dd_slot" + slot).addEventListener("change", shipUpdate, false);
                     }
                     
                     else{
@@ -2294,8 +2328,9 @@ function sectionChangeF(sectionLocation, sectionID){
 
 // Function to update ship statistics
 function shipUpdate(){
-    ship = {};
-    
+
+    ship = {"Hull":0, "RepK":0, "Armour Points":0, "ASG":0, "PSG":0, "LasPD":0, "FlakPD":0, "Warp":0, "Imp":0, "Apr":0, "Btty":0, "WCap":0, "AComA":0, "PComA":0, "TD":0, "ExDam":0, "HBore":0, "ArcC":0, "Plas-F":0, "EMine":0, "AnFC":0, "LDP":0, "Miss-L":0, "Miss-Rack":0, "Pho-R":0, "Pho-G":0, "H-RG":0, "L-RG":0, "DISR-JA":0, "DISR-C":0, "FlamSG":0, "Ph-2":0, "Ph-3":0, "L-IRE":0, "H-IC":0, "L-IC":0, "AC20":0, "AmLo":0, "MMS-L":0, "H-PAC":0, "L-PAC":0, "TBC":0, "Plas-D":0, "HAE":0, "LAE":0, "TracB":0, "TracEx":0, "ManT":0, "RepB":0, "Cargo":0, "ConHard":0, "SMG":0, "SenAr":0, "Mining Laser":0, "Mineral Scanner":0, "Miss-Fab":0, "AmFab":0, "DamCU":0};
+
     allSections = [foreSectionsIDs, midSectionsIDs, coreSectionsIDs, aftSectionsIDs];
     allLocations = ["fore", "mid", "core", "aft"];
 
@@ -2315,25 +2350,28 @@ function shipUpdate(){
                     for(let slot = 1; slot < 3; slot++){
                         // Code for getting components from a card
                         if(sections[sectionSelection]["slot_" + dr + "-" + slot + "_amount"] == "slot"){
+                            // core1dr-2-dd_slot1   // HERE!!!!
                             componentCard = document.getElementById(location + IDs[id] + "dr-" + dr + "-dd_slot" + slot).value;
-                            if(componentCard = ""){
-                                ship[components[componentCard]["Hull"]] = ship[components[componentCard]["Hull"]] + 2;
+                            if(componentCard == ""){
+                                ship["Hull"] = parseInt(ship["Hull"], 10) + 2;
                             }
                             else{
                                 for(let system = 1; system < 7; system++){
                                     if(components[componentCard]["system_" + system] != ""){
-                                        ship[components[componentCard]["system_" + system]] = ship[components[componentCard]["system" + system]] + components[componentCard]["system_" + system + "_amount"]
+                                        ship[components[componentCard]["system_" + system]] = parseInt(ship[components[componentCard]["system" + system]], 10) + parseInt(components[componentCard]["system_" + system + "_amount"], 10) // HERE - getting not a number error, also still have blank:undefined in ship
+                                        console.log(parseInt(ship[components[componentCard]["system" + system]], 10));
+                                        console.log(parseInt(components[componentCard]["system_" + system + "_amount"], 10));
+
                                     }
                                 }
                                 if(components[componentCard]["misc_1"] != ""){
                                     misc = components[componentCard]["misc_1"].replace(/[0-9]/g, "");
                                     misc = misc.replace("+ ", "");
-                                    amount = components[componentCard]["misc_1"].replace(/[^0-9]/g, "");
-                                    console.log(misc);
+                                    compAmount = components[componentCard]["misc_1"].replace(/[^0-9]/g, "");
                                     switch (misc){
                                         case "Armour Points":
                                         case "Shield Points":
-                                            ship[misc] = ship[misc] + parseInt(amount, 10);
+                                            ship[misc] = ship[misc] + parseInt(compAmount, 10);
                                             break;
                                     }
                                 }
@@ -2350,6 +2388,27 @@ function shipUpdate(){
                                             break;
                                     }
                                 }
+
+                                // Checking to see if frame type C and the location of that frame type is true
+                                if(frameSelection != ""){
+                                    if(frames[frameSelection]["code"] == "C" && location == frames[frameSelection]["var2"]){
+                                        let type = frames[frameSelection]["var1"];
+                                        let amount = frames[frameSelection]["var3"];
+                                        let slotType1 = frames[frameSelection]["var4"];
+                                        let slotType2 = frames[frameSelection]["var5"];
+                                        
+                                        // Checking if a damage region contains the slotType
+                                        let count = 0;
+                                        if(sections[sectionSelection]["slot_" + dr + "-1"] == slotType1 || sections[sectionSelection]["slot_" + dr + "-1"] == slotType2){
+                                            count++;
+                                        }
+                                        if(sections[sectionSelection]["slot_" + dr + "-2"] == slotType1 || sections[sectionSelection]["slot_" + dr + "-2"] == slotType2){
+                                            count++;
+                                        }
+                                        // Adding frame bonus
+                                        ship[type] = ship[type] + (count*amount);
+                                    }
+                                }
                             }
                         }
                         else{
@@ -2363,11 +2422,76 @@ function shipUpdate(){
                 ship[sections[sectionSelection]["slot_5-1"]] = ship[sections[sectionSelection]["slot_5-1"]] + sections[sectionSelection]["slot_5-1_amount"]
 
                 // Code to get frame bonus'
-                switch (frames[frameSelection]["code"]){
-                    case "B":
-                        componentCard = document.getElementById(location + IDs[id] + "dr-5-dd").value;
-                        if(componentCard = ""){
-                            ship[components[componentCard]["Hull"]] = ship[components[componentCard]["Hull"]] + 2;
+                if(frameSelection != ""){
+                    switch (frames[frameSelection]["code"]){
+                        case "B":
+                            if(location == frames[frameSelection]["var2"]){
+                                componentCard = document.getElementById(location + IDs[id] + "dr-5-dd").value;
+                                if(componentCard == ""){
+                                    ship["Hull"] = ship["Hull"] + 2;
+                                }
+                                else{
+                                    for(let system = 1; system < 7; system++){
+                                        if(components[componentCard]["system_" + system] != ""){
+                                            ship[components[componentCard]["system_" + system]] = ship[components[componentCard]["system" + system]] + components[componentCard]["system_" + system + "_amount"]
+                                        }
+                                    }
+                                    if(components[componentCard]["misc_1"] != ""){
+                                        misc = components[componentCard]["misc_1"].replace(/[0-9]/g, "");
+                                        misc = misc.replace("+ ", "");
+                                        compAmount = components[componentCard]["misc_1"].replace(/[^0-9]/g, "");
+                                        switch (misc){
+                                            case "Armour Points":
+                                            case "Shield Points":
+                                                ship[misc] = ship[misc] + parseInt(compAmount, 10);
+                                                break;
+                                        }
+                                    }
+                                    if(components[componentCard]["bonus"] != ""){
+                                        switch (components[componentCard]["bonustype"]){
+                                            case "Armour":
+                                            // Need a function after all cards have been calculated     HERE!!!!
+                                                break;
+                                            case "Warp":
+                                            case "Apr":
+                                                if(components[componentCard]["bonus2"] == location){
+                                                    ship[components[componentCard]["bonustype"]] = ship[components[componentCard]["bonustype"]] + components[componentCard]["bonus1"]
+                                                }
+                                                break;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        case "E":
+                            let type = frames[frameSelection]["var1"];
+                            let amount = frames[frameSelection]["var3"];
+                            ship[type] = ship[type] + amount;
+                            break;
+                        case "F":
+                            if(location == frames[frameSelection]["var2"]){
+                                let type = frames[frameSelection]["var1"];
+                                let amount = frames[frameSelection]["var3"];
+                                ship[type] = ship[type] + amount;
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+    
+        if(frameSelection != ""){
+            if(frames[frameSelection]["code"] == "D" && location == frames[frameSelection]["var2"]){
+                let type = frames[frameSelection]["var1"];
+                let sectionsNeeded = frames[frameSelection]["var3"];
+                let amount = frames[frameSelection]["var4"];
+                let amountSections = parseInt(document.getElementById("fore-sections-number").innerHTML, 10) + parseInt(document.getElementById("mid-sections-number").innerHTML, 10) + parseInt(document.getElementById("core-sections-number").innerHTML, 10) + parseInt(document.getElementById("aft-sections-number").innerHTML, 10);
+                
+                for(let j = 1; j <= Math.ceil(amountSections / sectionsNeeded); j++) {
+                    if(amount == "slot"){
+                        componentCard = document.getElementById(location + j + "bonus").value;
+                        if(componentCard == ""){
+                            ship["Hull"] = ship["Hull"] + 2;
                         }
                         else{
                             for(let system = 1; system < 7; system++){
@@ -2378,12 +2502,11 @@ function shipUpdate(){
                             if(components[componentCard]["misc_1"] != ""){
                                 misc = components[componentCard]["misc_1"].replace(/[0-9]/g, "");
                                 misc = misc.replace("+ ", "");
-                                amount = components[componentCard]["misc_1"].replace(/[^0-9]/g, "");
-                                console.log(misc);
+                                compAmount = components[componentCard]["misc_1"].replace(/[^0-9]/g, "");
                                 switch (misc){
                                     case "Armour Points":
                                     case "Shield Points":
-                                        ship[misc] = ship[misc] + parseInt(amount, 10);
+                                        ship[misc] = ship[misc] + parseInt(compAmount, 10);
                                         break;
                                 }
                             }
@@ -2401,25 +2524,13 @@ function shipUpdate(){
                                 }
                             }
                         }
-                        break;
-                    case "C":
-                        frameChangeC()
-                        // Do a check when doing slots and add if applicable.
-                        break;
-                    case "E":
-                        frameChangeE()
-                        break;
-                    case "F":
-                        frameChangeF()
-                        break;
+                    }
+                    else{
+                        ship[type] = ship[type] + amount;
+                    }
                 }
-
-
             }
         }
     }
-
-    case "D":
-        frameChangeD()
-        break;
+    console.log(ship);
 }
