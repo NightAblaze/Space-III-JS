@@ -1,4 +1,4 @@
-let ship = {"Hull":0, "RepK":0, "Armour Points":0, "ASG":0, "PSG":0, "LasPD":0, "FlakPD":0, "Warp":0, "Imp":0, "Apr":0, "Btty":0, "WCap":0, "AComA":0, "PComA":0, "TD":0, "ExDam":0,
+let ship = {"Hull":0, "RepK":0, "Shield Points":0, "Armour Points":0, "Matrix Armour":0, "ASG":0, "PSG":0, "LasPD":0, "FlakPD":0, "Warp":0, "Imp":0, "Apr":0, "Btty":0, "WCap":0, "AComA":0, "PComA":0, "TD":0, "ExDam":0,
 "HBore":0, "ArcC":0, "Plas-F":0, "EMine":0, "AnFC":0, "LDP":0, "Miss-L":0, "Miss-Rack":0, "Pho-R":0, "Pho-G":0, "H-RG":0, "L-RG":0, "DISR-JA":0, "DISR-C":0, "FlamSG":0,
 "Ph-2":0, "Ph-3":0, "L-IRE":0, "H-IC":0, "L-IC":0, "AC20":0, "AmLo":0, "MMS-L":0, "H-PAC":0, "L-PAC":0, "TBC":0, "Plas-D":0, "HAE":0, "LAE":0,
 "TracB":0, "TracEx":0, "ManT":0, "RepB":0, "Cargo":0, "ConHard":0, "SMG":0, "SenAr":0, "Mining Laser":0, "Mineral Scanner":0, "Miss-Fab":0, "AmFab":0, "DamCU":0};
@@ -14,6 +14,12 @@ let aftSectionsIDs = [];
 // Save for location bonus'
 let locationBonus = [];
 let selectionBonus = {};
+
+// Save location for armour bonus
+let foreArmour = {"armour":0, "bonus":0};
+let midArmour = {"armour":0, "bonus":0};
+let coreArmour = {"armour":0, "bonus":0};
+let aftArmour = {"armour":0, "bonus":0};
 
 // Assigning section locations to variables
 const fore = document.querySelector('#fore-frame');
@@ -677,19 +683,13 @@ function refreshFrame(){
             document.getElementById("frame-move-cost-text").innerHTML = "1/" + frames[frameSelection]["move cost base divider"] + " per " + frames[frameSelection]["move cost per sections"] + " sections + " + frames[frameSelection]["flat move cost"] + "/" + frames[frameSelection]["move cost base divider"];
         }
         
-        document.getElementById("frame-move-actual-text").innerHTML = parseFloat((1/frames[frameSelection]["move cost base divider"] * Math.floor(amountSections/frames[frameSelection]["move cost per sections"])) + (frames[frameSelection]["flat move cost"]/frames[frameSelection]["move cost base divider"])).toFixed(2);
         document.getElementById("frame-turn-rate-text").innerHTML = frames[frameSelection]["base turn rate"] + " - 1 per 4 sections";
-        document.getElementById("frame-turn-actual-text").innerHTML = Math.max(1,frames[frameSelection]["base turn rate"] - Math.floor(amountSections/4));
         document.getElementById("frame-damage-limit-text").innerHTML = "1 per " + frames[frameSelection]["damage limit divider"] + " sections + " + frames[frameSelection]["damage limit fixed"];
-        document.getElementById("frame-damage-actual-text").innerHTML = Math.floor(amountSections/frames[frameSelection]["damage limit divider"]) + frames[frameSelection]["damage limit fixed"];
         document.getElementById("frame-health-text").innerHTML = frames[frameSelection]["ht"];
-        document.getElementById("frame-health-actual-text").innerHTML = frames[frameSelection]["ht"];
         document.getElementById("frame-upgrade-cost-text").innerHTML = frames[frameSelection]["upgrade cost"];
         document.getElementById("frame-cost-text").innerHTML = frames[frameSelection]["frame cost"];
         document.getElementById("frame-sensors-text").innerHTML = frames[frameSelection]["sensors"];
-        document.getElementById("frame-sensors-actual-text").innerHTML = frames[frameSelection]["sensors"];
         document.getElementById("frame-signal-text").innerHTML = frames[frameSelection]["signal base"];
-        document.getElementById("frame-signal-actual-text").innerHTML = frames[frameSelection]["signal base"];
         document.getElementById("frame-misc-text").innerHTML = frames[frameSelection]["misc"];
 
         // Frame speciality selection
@@ -1400,24 +1400,24 @@ function frameChangeB(){
             }
             newDiv.appendChild(newItem);
             contents.appendChild(newDiv);
+        
+            // Adds the view button
+            document.getElementById(location + IDs[i] + "dr-5-view").innerHTML = ""
+                    
+            let viewBut = document.querySelector("#" + location + IDs[i] + "dr-5-view");
+            newItem = document.createElement("button");
+            newItem.setAttribute("class", "small-button");
+            newItem.setAttribute("id", location + IDs[i] + "dr-5-view-button");
+            newPic = document.createElement("img");
+            newPic.setAttribute("class", "button-image");
+            newPic.setAttribute("src", "images/magnifying_glass.jpg");
+            newPic.setAttribute("alt", "View");
+            newItem.appendChild(newPic);
+            viewBut.appendChild(newItem);
+
+            // Assigning the view button
+            document.getElementById(location + IDs[i] + "dr-5-view-button").addEventListener("click", view5, false);
         }
-
-        // Adds the view button
-        document.getElementById(location + IDs[i] + "dr-5-view").innerHTML = ""
-                
-        let viewBut = document.querySelector("#" + location + IDs[i] + "dr-5-view");
-        newItem = document.createElement("button");
-        newItem.setAttribute("class", "small-button");
-        newItem.setAttribute("id", location + IDs[i] + "dr-5-view-button");
-        newPic = document.createElement("img");
-        newPic.setAttribute("class", "button-image");
-        newPic.setAttribute("src", "images/magnifying_glass.jpg");
-        newPic.setAttribute("alt", "View");
-        newItem.appendChild(newPic);
-        viewBut.appendChild(newItem);
-
-        // Assigning the view button
-        document.getElementById(location + IDs[i] + "dr-5-view-button").addEventListener("click", view5, false);
     }
 }
 
@@ -2329,7 +2329,16 @@ function sectionChangeF(sectionLocation, sectionID){
 // Function to update ship statistics
 function shipUpdate(){
 
-    ship = {"Hull":0, "RepK":0, "Armour Points":0, "ASG":0, "PSG":0, "LasPD":0, "FlakPD":0, "Warp":0, "Imp":0, "Apr":0, "Btty":0, "WCap":0, "AComA":0, "PComA":0, "TD":0, "ExDam":0, "HBore":0, "ArcC":0, "Plas-F":0, "EMine":0, "AnFC":0, "LDP":0, "Miss-L":0, "Miss-Rack":0, "Pho-R":0, "Pho-G":0, "H-RG":0, "L-RG":0, "DISR-JA":0, "DISR-C":0, "FlamSG":0, "Ph-2":0, "Ph-3":0, "L-IRE":0, "H-IC":0, "L-IC":0, "AC20":0, "AmLo":0, "MMS-L":0, "H-PAC":0, "L-PAC":0, "TBC":0, "Plas-D":0, "HAE":0, "LAE":0, "TracB":0, "TracEx":0, "ManT":0, "RepB":0, "Cargo":0, "ConHard":0, "SMG":0, "SenAr":0, "Mining Laser":0, "Mineral Scanner":0, "Miss-Fab":0, "AmFab":0, "DamCU":0};
+    // Reseting ship stats
+    ship = {"Hull":0, "RepK":0, "Shield Points":0, "Armour Points":0, "Matrix Armour":0, "ASG":0, "PSG":0, "LasPD":0, "FlakPD":0, "Warp":0, "Imp":0, "Apr":0, "Btty":0, "WCap":0, "AComA":0, "PComA":0, "TD":0, "ExDam":0, "HBore":0, "ArcC":0, "Plas-F":0, "EMine":0, "AnFC":0, "LDP":0, "Miss-L":0, "Miss-Rack":0, "Pho-R":0, "Pho-G":0, "H-RG":0, "L-RG":0, "DISR-JA":0, "DISR-C":0, "FlamSG":0, "Ph-2":0, "Ph-3":0, "L-IRE":0, "H-IC":0, "L-IC":0, "AC20":0, "AmLo":0, "MMS-L":0, "H-PAC":0, "L-PAC":0, "TBC":0, "Plas-D":0, "HAE":0, "LAE":0, "TracB":0, "TracEx":0, "ManT":0, "RepB":0, "Cargo":0, "ConHard":0, "SMG":0, "SenAr":0, "Mining Laser":0, "Mineral Scanner":0, "Miss-Fab":0, "AmFab":0, "DamCU":0};
+    foreArmour["armour"] = 0;
+    foreArmour["bonus"] = 0;
+    midArmour["armour"] = 0;
+    midArmour["bonus"] = 0;
+    coreArmour["armour"] = 0;
+    coreArmour["bonus"] = 0;
+    aftArmour["armour"] = 0;
+    aftArmour["bonus"] = 0;
 
     allSections = [foreSectionsIDs, midSectionsIDs, coreSectionsIDs, aftSectionsIDs];
     allLocations = ["fore", "mid", "core", "aft"];
@@ -2339,7 +2348,6 @@ function shipUpdate(){
     for(let i = 0; i < allSections.length; i++){
         let IDs = allSections[i];
         let location = allLocations[i];
-
         for(let id = 0; id < IDs.length; id++){
             let sectionSelection = document.getElementById(location + IDs[id] + "section-name-dd").value;
         
@@ -2350,7 +2358,6 @@ function shipUpdate(){
                     for(let slot = 1; slot < 3; slot++){
                         // Code for getting components from a card
                         if(sections[sectionSelection]["slot_" + dr + "-" + slot + "_amount"] == "slot"){
-                            // core1dr-2-dd_slot1   // HERE!!!!
                             componentCard = document.getElementById(location + IDs[id] + "dr-" + dr + "-dd_slot" + slot).value;
                             if(componentCard == ""){
                                 ship["Hull"] = parseInt(ship["Hull"], 10) + 2;
@@ -2358,10 +2365,7 @@ function shipUpdate(){
                             else{
                                 for(let system = 1; system < 7; system++){
                                     if(components[componentCard]["system_" + system] != ""){
-                                        ship[components[componentCard]["system_" + system]] = parseInt(ship[components[componentCard]["system" + system]], 10) + parseInt(components[componentCard]["system_" + system + "_amount"], 10) // HERE - getting not a number error, also still have blank:undefined in ship
-                                        console.log(parseInt(ship[components[componentCard]["system" + system]], 10));
-                                        console.log(parseInt(components[componentCard]["system_" + system + "_amount"], 10));
-
+                                        ship[components[componentCard]["system_" + system]] = parseInt(ship[components[componentCard]["system_" + system]], 10) + parseInt(components[componentCard]["system_" + system + "_amount"], 10);
                                     }
                                 }
                                 if(components[componentCard]["misc_1"] != ""){
@@ -2378,7 +2382,26 @@ function shipUpdate(){
                                 if(components[componentCard]["bonus"] != ""){
                                     switch (components[componentCard]["bonustype"]){
                                         case "Armour":
-                                        // Need a function after all cards have been calculated     HERE!!!!
+                                            armAmount = components[componentCard]["misc_1"].replace(/[^0-9]/g, "");
+                                            armAmount = parseInt(armAmount, 10);
+                                            switch(location){
+                                                case "fore":
+                                                    foreArmour["armour"] = foreArmour["armour"] + armAmount;
+                                                    foreArmour["bonus"] = foreArmour["bonus"] + components[componentCard]["bonus1"];
+                                                    break;
+                                                case "mid":
+                                                    midArmour["armour"] = midArmour["armour"] + armAmount;
+                                                    midArmour["bonus"] = midArmour["bonus"] + components[componentCard]["bonus1"];
+                                                    break;
+                                                case "core":
+                                                    coreArmour["armour"] = coreArmour["armour"] + armAmount;
+                                                    coreArmour["bonus"] = coreArmour["bonus"] + components[componentCard]["bonus1"];
+                                                    break;
+                                                case "aft":
+                                                    aftArmour["armour"] = aftArmour["armour"] + armAmount;
+                                                    aftArmour["bonus"] = aftArmour["bonus"] + components[componentCard]["bonus1"];
+                                                    break;
+                                            }
                                             break;
                                         case "Warp":
                                         case "Apr":
@@ -2413,7 +2436,9 @@ function shipUpdate(){
                         }
                         else{
                         // Code to get components from non slot damage region
-                        ship[sections[sectionSelection]["slot_" + dr + "-" + slot]] = ship[sections[sectionSelection]["slot_" + dr + "-" + slot]] + sections[sectionSelection]["slot_" + dr + "-" + slot + "_amount"]
+                            if(sections[sectionSelection]["slot_" + dr + "-" + slot] != ""){
+                                ship[sections[sectionSelection]["slot_" + dr + "-" + slot]] = ship[sections[sectionSelection]["slot_" + dr + "-" + slot]] + sections[sectionSelection]["slot_" + dr + "-" + slot + "_amount"]
+                            }
                         }
                     } 
                 }
@@ -2450,7 +2475,26 @@ function shipUpdate(){
                                     if(components[componentCard]["bonus"] != ""){
                                         switch (components[componentCard]["bonustype"]){
                                             case "Armour":
-                                            // Need a function after all cards have been calculated     HERE!!!!
+                                                armAmount = components[componentCard]["misc_1"].replace(/[^0-9]/g, "");
+                                                armAmount = parseInt(armAmount, 10);
+                                                switch(location){
+                                                    case "fore":
+                                                        foreArmour["armour"] = foreArmour["armour"] + armAmount;
+                                                        foreArmour["bonus"] = foreArmour["bonus"] + components[componentCard]["bonus1"];
+                                                        break;
+                                                    case "mid":
+                                                        midArmour["armour"] = midArmour["armour"] + armAmount;
+                                                        midArmour["bonus"] = midArmour["bonus"] + components[componentCard]["bonus1"];
+                                                        break;
+                                                    case "core":
+                                                        coreArmour["armour"] = coreArmour["armour"] + armAmount;
+                                                        coreArmour["bonus"] = coreArmour["bonus"] + components[componentCard]["bonus1"];
+                                                        break;
+                                                    case "aft":
+                                                        aftArmour["armour"] = aftArmour["armour"] + armAmount;
+                                                        aftArmour["bonus"] = aftArmour["bonus"] + components[componentCard]["bonus1"];
+                                                        break;
+                                                }
                                                 break;
                                             case "Warp":
                                             case "Apr":
@@ -2513,8 +2557,27 @@ function shipUpdate(){
                             if(components[componentCard]["bonus"] != ""){
                                 switch (components[componentCard]["bonustype"]){
                                     case "Armour":
-                                    // Need a function after all cards have been calculated     HERE!!!!
-                                        break;
+                                            armAmount = components[componentCard]["misc_1"].replace(/[^0-9]/g, "");
+                                            armAmount = parseInt(armAmount, 10);
+                                            switch(location){
+                                                case "fore":
+                                                    foreArmour["armour"] = foreArmour["armour"] + armAmount;
+                                                    foreArmour["bonus"] = foreArmour["bonus"] + components[componentCard]["bonus1"];
+                                                    break;
+                                                case "mid":
+                                                    midArmour["armour"] = midArmour["armour"] + armAmount;
+                                                    midArmour["bonus"] = midArmour["bonus"] + components[componentCard]["bonus1"];
+                                                    break;
+                                                case "core":
+                                                    coreArmour["armour"] = coreArmour["armour"] + armAmount;
+                                                    coreArmour["bonus"] = coreArmour["bonus"] + components[componentCard]["bonus1"];
+                                                    break;
+                                                case "aft":
+                                                    aftArmour["armour"] = aftArmour["armour"] + armAmount;
+                                                    aftArmour["bonus"] = aftArmour["bonus"] + components[componentCard]["bonus1"];
+                                                    break;
+                                            }
+                                            break;
                                     case "Warp":
                                     case "Apr":
                                         if(components[componentCard]["bonus2"] == location){
@@ -2532,5 +2595,75 @@ function shipUpdate(){
             }
         }
     }
-    console.log(ship);
+
+                //HERE 
+                // CORE SECTIONS NEED BONUS' APPLYING
+
+    
+    // Working out location with most armour and applying bonus
+    mostArmour = Math.max(foreArmour["armour"], midArmour["armour"], coreArmour["armour"], aftArmour["armour"]);
+    switch(mostArmour){
+        case foreArmour["armour"]:
+            ship["Armour Points"] = ship["Armour Points"] + foreArmour["bonus"];
+            break;
+        case midArmour["armour"]:
+            ship["Armour Points"] = ship["Armour Points"] + midArmour["bonus"];
+            break;
+        case coreArmour["armour"]:
+            ship["Armour Points"] = ship["Armour Points"] + coreArmour["bonus"];
+            break;
+        case aftArmour["armour"]:
+            ship["Armour Points"] = ship["Armour Points"] + aftArmour["bonus"];
+            break;
+    }
+
+    //Updating frame values that can change from cards
+    frameSelection = document.getElementById("frame-name-dd").value;
+    amountSections = parseInt(document.getElementById("fore-sections-number").innerHTML, 10) + parseInt(document.getElementById("mid-sections-number").innerHTML, 10) + parseInt(document.getElementById("core-sections-number").innerHTML, 10) + parseInt(document.getElementById("aft-sections-number").innerHTML, 10);
+    armourAmount = ship["Armour Points"];
+    shieldAmount = (ship["ASG"] * 15) + (ship["PSG"] * 6) + ship["Shield Points"];
+
+    if(frameSelection != ""){
+        document.getElementById("frame-move-actual-text").innerHTML = parseFloat((1/frames[frameSelection]["move cost base divider"] * Math.floor(amountSections/frames[frameSelection]["move cost per sections"])) + (frames[frameSelection]["flat move cost"]/frames[frameSelection]["move cost base divider"])).toFixed(2);
+        document.getElementById("frame-turn-actual-text").innerHTML = Math.max(1,frames[frameSelection]["base turn rate"] - Math.floor(amountSections/4)) + ship["ManT"];
+        document.getElementById("frame-damage-actual-text").innerHTML = Math.floor(amountSections/frames[frameSelection]["damage limit divider"]) + frames[frameSelection]["damage limit fixed"] + ship["DamCU"];
+        document.getElementById("frame-health-actual-text").innerHTML = frames[frameSelection]["ht"] + ship["ConHard"];
+        document.getElementById("frame-sensors-actual-text").innerHTML = frames[frameSelection]["sensors"] + ship["SenAr"];
+        document.getElementById("frame-signal-actual-text").innerHTML = frames[frameSelection]["signal base"];
+        
+        // Calculating armour in each location
+        armourDivsor = frames[frameSelection]["armour pattern fore"] + frames[frameSelection]["armour pattern mid"] + frames[frameSelection]["armour pattern aft"];
+        armourPerLocation = Math.floor(armourAmount / armourDivsor);
+        remainder = armourAmount % armourDivsor;
+        document.getElementById("fore-armour-number").innerHTML = (armourPerLocation * frames[frameSelection]["armour pattern fore"]) + armourRemainder[remainder][0];
+        document.getElementById("mid-armour-number").innerHTML = (armourPerLocation * frames[frameSelection]["armour pattern mid"]) + armourRemainder[remainder][1];
+        document.getElementById("aft-armour-number").innerHTML = (armourPerLocation * frames[frameSelection]["armour pattern aft"]) + armourRemainder[remainder][2];
+        
+
+        // Calculating each shield facing
+        shieldDivsor = frames[frameSelection]["shield pattern front"] + (2 * frames[frameSelection]["shield pattern front side"]) + (2 * frames[frameSelection]["shield pattern rear side"]) + frames[frameSelection]["shield pattern rear"];
+        shieldPerFacing = Math.floor(shieldAmount / shieldDivsor);
+        remainder = shieldAmount % shieldDivsor;
+        document.getElementById("front-shield-number").innerHTML = (shieldPerFacing * frames[frameSelection]["shield pattern front"]) + shieldRemainder[remainder][0];
+        document.getElementById("front-left-shield-number").innerHTML = (shieldPerFacing * frames[frameSelection]["shield pattern front side"]) + shieldRemainder[remainder][1];
+        document.getElementById("front-right-shield-number").innerHTML = (shieldPerFacing * frames[frameSelection]["shield pattern front side"]) + shieldRemainder[remainder][2];
+        document.getElementById("rear-left-shield-number").innerHTML = (shieldPerFacing * frames[frameSelection]["shield pattern rear side"]) + shieldRemainder[remainder][3];
+        document.getElementById("rear-right-shield-number").innerHTML = (shieldPerFacing * frames[frameSelection]["shield pattern rear side"]) + shieldRemainder[remainder][4];
+        document.getElementById("rear-shield-number").innerHTML = (shieldPerFacing * frames[frameSelection]["shield pattern rear"]) + shieldRemainder[remainder][5];
+    }
+
+    document.getElementById("repair-number").innerHTML = ship["RepK"];
+    document.getElementById("warp-number").innerHTML = ship["Warp"];
+    document.getElementById("impulse-number").innerHTML = ship["Imp"];
+    document.getElementById("reactor-number").innerHTML = ship["Apr"];
+    document.getElementById("battery-number").innerHTML = ship["Btty"];
+    document.getElementById("wep-cap-number").innerHTML = ship["WCap"];
+    document.getElementById("armour-number").innerHTML = armourAmount;
+    document.getElementById("matrix-armour-number").innerHTML = ship["Matrix Armour"];
+    document.getElementById("shield-number").innerHTML = shieldAmount
 }
+
+// HERE
+// need to count bonus' from core section (+ shield, + armour etc)
+// need to sort shield modulator
+// Need save/load function

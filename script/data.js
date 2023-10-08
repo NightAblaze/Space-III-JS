@@ -123,3 +123,8 @@ let components = {
     "Emergency Systems":        {"type": "Utility","subtype": "","tier": "Basic","system_1": "DamCU","system_1_amount": 1,"system_2": "Hull","system_2_amount": 1,"system_3": "","system_3_amount": "","system_4": "","system_4_amount": "","system_5": "","system_5_amount": "","system_6": "","system_6_amount": "","misc_1": "+2 Armour Points","misc_2": "","cost": 25,"bonus": "", "bonustype": "", "bonus1": "", "bonus2": ""},
     "Weapon Support":           {"type": "Utility","subtype": "","tier": "Basic","system_1": "WCap","system_1_amount": 1,"system_2": "PComA","system_2_amount": 1,"system_3": "TD","system_3_amount": 1,"system_4": "Btty","system_4_amount": 1,"system_5": "Hull","system_5_amount": 2,"system_6": "","system_6_amount": "","misc_1": "","misc_2": "","cost": 25,"bonus": "", "bonustype": "", "bonus1": "", "bonus2": ""}
 }
+
+let armourRemainder = {0:[0,0,0], 1:[1,0,0], 2:[1,1,0], 3:[1,1,1], 4:[2,1,1], 5:[2,2,1], 6:[2,2,2], 7:[3,2,2], 8:[3,3,2]};
+
+let shieldRemainder = {0:[0,0,0,0,0,0], 1:[1,0,0,0,0,0], 2:[0,1,1,0,0,0], 3:[1,1,1,0,0,0], 4:[1,1,1,0,0,1], 5:[1,1,1,1,1,0], 6:[1,1,1,1,1,1], 7:[2,1,1,1,1,1], 8:[1,2,2,1,1,1], 
+9:[2,2,2,1,1,1], 10:[2,2,2,1,1,2], 11:[2,2,2,2,2,1], 12:[2,2,2,2,2,2], 13:[3,2,2,2,2,2], 14:[2,3,3,2,2,2], 15:[3,3,3,2,2,2], 16:[3,3,3,2,2,3], 17:[3,3,3,3,3,2], 18:[3,3,3,3,3,3]};
