@@ -1,4 +1,4 @@
-let ship = {"Hull":0, "RepK":0, "Shield Points":0, "Armour Points":0, "Matrix Armour":0, "ASG":0, "PSG":0, "LasPD":0, "FlakPD":0, "Warp":0, "Imp":0, "Apr":0, "Btty":0, "WCap":0, "AComA":0, "PComA":0, "TD":0, "ExDam":0,
+let ship = {"Cost":0, "Hull":0, "RepK":0, "Shield Points":0, "Armour Points":0, "Matrix Armour":0, "ASG":0, "PSG":0, "LasPD":0, "FlakPD":0, "Warp":0, "Imp":0, "Apr":0, "Btty":0, "Passive Energy Drain":0, "WCap":0, "AComA":0, "PComA":0, "TD":0, "ExDam":0,
 "HBore":0, "ArcC":0, "Plas-F":0, "EMine":0, "AnFC":0, "LDP":0, "Miss-L":0, "Miss-Rack":0, "Pho-R":0, "Pho-G":0, "H-RG":0, "L-RG":0, "DISR-JA":0, "DISR-C":0, "FlamSG":0,
 "Ph-2":0, "Ph-3":0, "L-IRE":0, "H-IC":0, "L-IC":0, "AC20":0, "AmLo":0, "MMS-L":0, "H-PAC":0, "L-PAC":0, "TBC":0, "Plas-D":0, "HAE":0, "LAE":0,
 "TracB":0, "TracEx":0, "ManT":0, "RepB":0, "Cargo":0, "ConHard":0, "SMG":0, "SenAr":0, "Mining Laser":0, "Mineral Scanner":0, "Miss-Fab":0, "AmFab":0, "DamCU":0};
@@ -20,6 +20,12 @@ let foreArmour = {"armour":0, "bonus":0};
 let midArmour = {"armour":0, "bonus":0};
 let coreArmour = {"armour":0, "bonus":0};
 let aftArmour = {"armour":0, "bonus":0};
+
+// Save location for modifiers to shield/armour
+let armourShieldModifier = 1;
+
+// Shield Modulator
+let currentShield = "1-1-1-1";
 
 // Assigning section locations to variables
 const fore = document.querySelector('#fore-frame');
@@ -674,7 +680,16 @@ function refreshFrame(){
     if(frameSelection != ""){
         document.getElementById("frame-tier-text").innerHTML = frames[frameSelection]["tier"];
         document.getElementById("frame-armour-pattern-text").innerHTML = frames[frameSelection]["armour pattern fore"] + "-" + frames[frameSelection]["armour pattern mid"] + "-" + frames[frameSelection]["armour pattern aft"];
-        document.getElementById("frame-shield-pattern-text").innerHTML = frames[frameSelection]["shield pattern front"] + "-" + frames[frameSelection]["shield pattern front side"] + "-" + frames[frameSelection]["shield pattern rear side"] + "-" + frames[frameSelection]["shield pattern rear"];
+        
+        // Clearing shield pattern
+        document.getElementById("frame-shield-pattern").innerHTML = "";
+        shieldPatternLocation = document.querySelector("#frame-shield-pattern");
+
+        //  Creating shield pattern paragraph and text
+        newItem = document.createElement("p");
+        newText = document.createTextNode(frames[frameSelection]["shield pattern front"] + "-" + frames[frameSelection]["shield pattern front side"] + "-" + frames[frameSelection]["shield pattern rear side"] + "-" + frames[frameSelection]["shield pattern rear"]);
+        newItem.appendChild(newText);
+        shieldPatternLocation.appendChild(newItem);
 
         if(frames[frameSelection]["flat move cost"] == 0){
             document.getElementById("frame-move-cost-text").innerHTML = "1/" + frames[frameSelection]["move cost base divider"] + " per " + frames[frameSelection]["move cost per sections"] + " sections";
@@ -2330,7 +2345,7 @@ function sectionChangeF(sectionLocation, sectionID){
 function shipUpdate(){
 
     // Reseting ship stats
-    ship = {"Hull":0, "RepK":0, "Shield Points":0, "Armour Points":0, "Matrix Armour":0, "ASG":0, "PSG":0, "LasPD":0, "FlakPD":0, "Warp":0, "Imp":0, "Apr":0, "Btty":0, "WCap":0, "AComA":0, "PComA":0, "TD":0, "ExDam":0, "HBore":0, "ArcC":0, "Plas-F":0, "EMine":0, "AnFC":0, "LDP":0, "Miss-L":0, "Miss-Rack":0, "Pho-R":0, "Pho-G":0, "H-RG":0, "L-RG":0, "DISR-JA":0, "DISR-C":0, "FlamSG":0, "Ph-2":0, "Ph-3":0, "L-IRE":0, "H-IC":0, "L-IC":0, "AC20":0, "AmLo":0, "MMS-L":0, "H-PAC":0, "L-PAC":0, "TBC":0, "Plas-D":0, "HAE":0, "LAE":0, "TracB":0, "TracEx":0, "ManT":0, "RepB":0, "Cargo":0, "ConHard":0, "SMG":0, "SenAr":0, "Mining Laser":0, "Mineral Scanner":0, "Miss-Fab":0, "AmFab":0, "DamCU":0};
+    ship = {"Cost":0, "Hull":0, "RepK":0, "Shield Points":0, "Armour Points":0, "Matrix Armour":0, "ASG":0, "PSG":0, "LasPD":0, "FlakPD":0, "Warp":0, "Imp":0, "Apr":0, "Btty":0, "Passive Energy Drain":0, "WCap":0, "AComA":0, "PComA":0, "TD":0, "ExDam":0, "HBore":0, "ArcC":0, "Plas-F":0, "EMine":0, "AnFC":0, "LDP":0, "Miss-L":0, "Miss-Rack":0, "Pho-R":0, "Pho-G":0, "H-RG":0, "L-RG":0, "DISR-JA":0, "DISR-C":0, "FlamSG":0, "Ph-2":0, "Ph-3":0, "L-IRE":0, "H-IC":0, "L-IC":0, "AC20":0, "AmLo":0, "MMS-L":0, "H-PAC":0, "L-PAC":0, "TBC":0, "Plas-D":0, "HAE":0, "LAE":0, "TracB":0, "TracEx":0, "ManT":0, "RepB":0, "Cargo":0, "ConHard":0, "SMG":0, "SenAr":0, "Mining Laser":0, "Mineral Scanner":0, "Miss-Fab":0, "AmFab":0, "DamCU":0};
     foreArmour["armour"] = 0;
     foreArmour["bonus"] = 0;
     midArmour["armour"] = 0;
@@ -2340,10 +2355,28 @@ function shipUpdate(){
     aftArmour["armour"] = 0;
     aftArmour["bonus"] = 0;
 
+    armourShieldModifier = 1;
+
     allSections = [foreSectionsIDs, midSectionsIDs, coreSectionsIDs, aftSectionsIDs];
     allLocations = ["fore", "mid", "core", "aft"];
 
     let frameSelection = document.getElementById("frame-name-dd").value;
+
+    // Frame cost
+    let upgradeCost = 0;
+    if(frameSelection != ""){
+        ship["Cost"] = ship["Cost"] + frames[frameSelection]["frame cost"];
+
+        amountSections = parseInt(document.getElementById("fore-sections-number").innerHTML, 10) + parseInt(document.getElementById("mid-sections-number").innerHTML, 10) + parseInt(document.getElementById("core-sections-number").innerHTML, 10) + parseInt(document.getElementById("aft-sections-number").innerHTML, 10);
+        if(amountSections > 4){
+            for(let i = 5; i < amountSections + 1; i++){
+                exponential = Math.floor((i-1) / 3);
+                addedCost = frames[frameSelection]["upgrade cost"] ** exponential;
+                upgradeCost = upgradeCost + addedCost;
+            }
+        }
+        ship["Cost"] = ship["Cost"] + upgradeCost;
+    }
 
     for(let i = 0; i < allSections.length; i++){
         let IDs = allSections[i];
@@ -2432,6 +2465,8 @@ function shipUpdate(){
                                         ship[type] = ship[type] + (count*amount);
                                     }
                                 }
+                                // Adding component card cost
+                                ship["Cost"] = ship["Cost"] + components[componentCard]["cost"];
                             }
                         }
                         else{
@@ -2443,8 +2478,47 @@ function shipUpdate(){
                     } 
                 }
 
+                // Code to get misc bonus
+                if(sections[sectionSelection]["misc"] != ""){
+                    switch (sections[sectionSelection]["misctype"]){
+                        case "A":
+                            // + X to Y
+                            ship[sections[sectionSelection]["misc2"]] = ship[sections[sectionSelection]["misc2"]] + sections[sectionSelection]["misc1"];
+                            if(sections[sectionSelection]["misc2"] == "Armour Points"){
+                                switch(location){
+                                    case "fore":
+                                        foreArmour["armour"] = foreArmour["armour"] + sections[sectionSelection]["misc1"];
+                                        break;
+                                    case "mid":
+                                        midArmour["armour"] = midArmour["armour"] + sections[sectionSelection]["misc1"];
+                                        break;
+                                    case "core":
+                                        coreArmour["armour"] = coreArmour["armour"] + sections[sectionSelection]["misc1"];
+                                        break;
+                                    case "aft":
+                                        aftArmour["armour"] = aftArmour["armour"] + sections[sectionSelection]["misc1"];
+                                        break;
+                                }
+                            }
+                            break;
+                        case "B":
+                            // + X to Y in specific situation
+                            // Un-needed in build phase
+                            break;
+                        case "C":
+                            // - % to shield & armour
+                            if(armourShieldModifier > 0.6){
+                                armourShieldModifier = Math.round(((armourShieldModifier - sections[sectionSelection]["misc1"])+ Number.EPSILON) * 100) / 100;
+                            }
+                            break;
+                    }
+                }
+
                 // Code to get components from damage region 5
-                ship[sections[sectionSelection]["slot_5-1"]] = ship[sections[sectionSelection]["slot_5-1"]] + sections[sectionSelection]["slot_5-1_amount"]
+                ship[sections[sectionSelection]["slot_5-1"]] = ship[sections[sectionSelection]["slot_5-1"]] + sections[sectionSelection]["slot_5-1_amount"];
+
+                // Adding sectioncard cost
+                ship["Cost"] = ship["Cost"] + sections[sectionSelection]["cost"];
 
                 // Code to get frame bonus'
                 if(frameSelection != ""){
@@ -2458,7 +2532,7 @@ function shipUpdate(){
                                 else{
                                     for(let system = 1; system < 7; system++){
                                         if(components[componentCard]["system_" + system] != ""){
-                                            ship[components[componentCard]["system_" + system]] = ship[components[componentCard]["system" + system]] + components[componentCard]["system_" + system + "_amount"]
+                                            ship[components[componentCard]["system_" + system]] = ship[components[componentCard]["system_" + system]] + components[componentCard]["system_" + system + "_amount"]
                                         }
                                     }
                                     if(components[componentCard]["misc_1"] != ""){
@@ -2504,6 +2578,8 @@ function shipUpdate(){
                                                 break;
                                         }
                                     }
+                                    // Adding component card cost
+                                    ship["Cost"] = ship["Cost"] + components[componentCard]["cost"];
                                 }
                             }
                             break;
@@ -2540,7 +2616,7 @@ function shipUpdate(){
                         else{
                             for(let system = 1; system < 7; system++){
                                 if(components[componentCard]["system_" + system] != ""){
-                                    ship[components[componentCard]["system_" + system]] = ship[components[componentCard]["system" + system]] + components[componentCard]["system_" + system + "_amount"]
+                                    ship[components[componentCard]["system_" + system]] = ship[components[componentCard]["system_" + system]] + components[componentCard]["system_" + system + "_amount"]
                                 }
                             }
                             if(components[componentCard]["misc_1"] != ""){
@@ -2586,6 +2662,8 @@ function shipUpdate(){
                                         break;
                                 }
                             }
+                            // Adding component card cost
+                            ship["Cost"] = ship["Cost"] + components[componentCard]["cost"];
                         }
                     }
                     else{
@@ -2595,11 +2673,48 @@ function shipUpdate(){
             }
         }
     }
-
-                //HERE 
-                // CORE SECTIONS NEED BONUS' APPLYING
-
     
+    // Adding shield modulator selector
+    // Clearing shield pattern
+    document.getElementById("frame-shield-pattern").innerHTML = "";
+    shieldPatternLocation = document.querySelector("#frame-shield-pattern");
+    if(ship["SMG"] > 0){
+        // Creating list for dropdown
+        let shieldOptions = Object.keys(shieldPatterns);
+        
+        // Creating section name div and dropdown
+        newItem = document.createElement("select");
+        newItem.setAttribute("class", "card-selection");
+        newItem.setAttribute("name", "shield-pattern-name-dd");
+        newItem.setAttribute("id", "shield-pattern-name-dd");
+
+        // Applying dropdown to shield pattern selection
+        for(let i = 0; i < shieldOptions.length; i++) {
+            let opt = shieldOptions[i];
+            let el = document.createElement("option");
+            el.textContent = opt;
+            el.value = opt;
+            newItem.appendChild(el);
+        }
+        shieldPatternLocation.appendChild(newItem);
+
+        // Setting modulator value to last used
+        document.getElementById("shield-pattern-name-dd").value = currentShield
+
+        // Adding event listeneror drop down
+        document.getElementById("shield-pattern-name-dd").addEventListener("change", shieldPatternChange, false);
+
+        // Updating shield pattern
+        shieldPatternChange()
+    }
+    else if(frameSelection != ""){
+        //  Creating shield pattern paragraph and text
+        newItem = document.createElement("p");
+        newText = document.createTextNode(frames[frameSelection]["shield pattern front"] + "-" + frames[frameSelection]["shield pattern front side"] + "-" + frames[frameSelection]["shield pattern rear side"] + "-" + frames[frameSelection]["shield pattern rear"]);
+        newItem.appendChild(newText);
+        shieldPatternLocation.appendChild(newItem);
+    }
+
     // Working out location with most armour and applying bonus
     mostArmour = Math.max(foreArmour["armour"], midArmour["armour"], coreArmour["armour"], aftArmour["armour"]);
     switch(mostArmour){
@@ -2623,6 +2738,10 @@ function shipUpdate(){
     armourAmount = ship["Armour Points"];
     shieldAmount = (ship["ASG"] * 15) + (ship["PSG"] * 6) + ship["Shield Points"];
 
+    // Changing shield and armour values by modifier
+    armourAmount = Math.round(armourAmount * armourShieldModifier)
+    shieldAmount = Math.round(shieldAmount * armourShieldModifier)
+
     if(frameSelection != ""){
         document.getElementById("frame-move-actual-text").innerHTML = parseFloat((1/frames[frameSelection]["move cost base divider"] * Math.floor(amountSections/frames[frameSelection]["move cost per sections"])) + (frames[frameSelection]["flat move cost"]/frames[frameSelection]["move cost base divider"])).toFixed(2);
         document.getElementById("frame-turn-actual-text").innerHTML = Math.max(1,frames[frameSelection]["base turn rate"] - Math.floor(amountSections/4)) + ship["ManT"];
@@ -2639,17 +2758,18 @@ function shipUpdate(){
         document.getElementById("mid-armour-number").innerHTML = (armourPerLocation * frames[frameSelection]["armour pattern mid"]) + armourRemainder[remainder][1];
         document.getElementById("aft-armour-number").innerHTML = (armourPerLocation * frames[frameSelection]["armour pattern aft"]) + armourRemainder[remainder][2];
         
-
-        // Calculating each shield facing
-        shieldDivsor = frames[frameSelection]["shield pattern front"] + (2 * frames[frameSelection]["shield pattern front side"]) + (2 * frames[frameSelection]["shield pattern rear side"]) + frames[frameSelection]["shield pattern rear"];
-        shieldPerFacing = Math.floor(shieldAmount / shieldDivsor);
-        remainder = shieldAmount % shieldDivsor;
-        document.getElementById("front-shield-number").innerHTML = (shieldPerFacing * frames[frameSelection]["shield pattern front"]) + shieldRemainder[remainder][0];
-        document.getElementById("front-left-shield-number").innerHTML = (shieldPerFacing * frames[frameSelection]["shield pattern front side"]) + shieldRemainder[remainder][1];
-        document.getElementById("front-right-shield-number").innerHTML = (shieldPerFacing * frames[frameSelection]["shield pattern front side"]) + shieldRemainder[remainder][2];
-        document.getElementById("rear-left-shield-number").innerHTML = (shieldPerFacing * frames[frameSelection]["shield pattern rear side"]) + shieldRemainder[remainder][3];
-        document.getElementById("rear-right-shield-number").innerHTML = (shieldPerFacing * frames[frameSelection]["shield pattern rear side"]) + shieldRemainder[remainder][4];
-        document.getElementById("rear-shield-number").innerHTML = (shieldPerFacing * frames[frameSelection]["shield pattern rear"]) + shieldRemainder[remainder][5];
+        if(ship["SMG"] == 0){
+            // Calculating each shield facing
+            shieldDivsor = frames[frameSelection]["shield pattern front"] + (2 * frames[frameSelection]["shield pattern front side"]) + (2 * frames[frameSelection]["shield pattern rear side"]) + frames[frameSelection]["shield pattern rear"];
+            shieldPerFacing = Math.floor(shieldAmount / shieldDivsor);
+            remainder = shieldAmount % shieldDivsor;
+            document.getElementById("front-shield-number").innerHTML = (shieldPerFacing * frames[frameSelection]["shield pattern front"]) + shieldRemainder[remainder][0];
+            document.getElementById("front-left-shield-number").innerHTML = (shieldPerFacing * frames[frameSelection]["shield pattern front side"]) + shieldRemainder[remainder][1];
+            document.getElementById("front-right-shield-number").innerHTML = (shieldPerFacing * frames[frameSelection]["shield pattern front side"]) + shieldRemainder[remainder][2];
+            document.getElementById("rear-left-shield-number").innerHTML = (shieldPerFacing * frames[frameSelection]["shield pattern rear side"]) + shieldRemainder[remainder][3];
+            document.getElementById("rear-right-shield-number").innerHTML = (shieldPerFacing * frames[frameSelection]["shield pattern rear side"]) + shieldRemainder[remainder][4];
+            document.getElementById("rear-shield-number").innerHTML = (shieldPerFacing * frames[frameSelection]["shield pattern rear"]) + shieldRemainder[remainder][5];
+        }
     }
 
     document.getElementById("repair-number").innerHTML = ship["RepK"];
@@ -2660,10 +2780,36 @@ function shipUpdate(){
     document.getElementById("wep-cap-number").innerHTML = ship["WCap"];
     document.getElementById("armour-number").innerHTML = armourAmount;
     document.getElementById("matrix-armour-number").innerHTML = ship["Matrix Armour"];
-    document.getElementById("shield-number").innerHTML = shieldAmount
+    document.getElementById("shield-number").innerHTML = shieldAmount;
+    document.getElementById("hull-number").innerHTML = ship["Hull"];
+    document.getElementById("cost-number").innerHTML = ship["Cost"];
+    document.getElementById("upgrade-cost-number").innerHTML = upgradeCost;
+    document.getElementById("passive-energy-drain-number").innerHTML = ship["Passive Energy Drain"];
+}
+
+
+function shieldPatternChange(){
+    currentShield = document.getElementById("shield-pattern-name-dd").value;
+    shieldModulator = shieldPatterns[currentShield];
+    // let frameSelection = document.getElementById("frame-name-dd").value;
+    
+    // Getting shield values
+    shieldAmount = (ship["ASG"] * 15) + (ship["PSG"] * 6) + ship["Shield Points"];
+    shieldAmount = Math.round(shieldAmount * armourShieldModifier)
+
+    // Calculating each shield facing
+    shieldDivsor = shieldModulator[0] + (2 * shieldModulator[1]) + (2 * shieldModulator[2]) + shieldModulator[3];
+    shieldPerFacing = Math.floor(shieldAmount / shieldDivsor);
+    remainder = shieldAmount % shieldDivsor;
+
+    document.getElementById("front-shield-number").innerHTML = (shieldPerFacing * shieldModulator[0]) + shieldRemainder[remainder][0];
+    document.getElementById("front-left-shield-number").innerHTML = (shieldPerFacing * shieldModulator[1]) + shieldRemainder[remainder][1];
+    document.getElementById("front-right-shield-number").innerHTML = (shieldPerFacing * shieldModulator[1]) + shieldRemainder[remainder][2];
+    document.getElementById("rear-left-shield-number").innerHTML = (shieldPerFacing * shieldModulator[2]) + shieldRemainder[remainder][3];
+    document.getElementById("rear-right-shield-number").innerHTML = (shieldPerFacing * shieldModulator[2]) + shieldRemainder[remainder][4];
+    document.getElementById("rear-shield-number").innerHTML = (shieldPerFacing * shieldModulator[3]) + shieldRemainder[remainder][5];
 }
 
 // HERE
-// need to count bonus' from core section (+ shield, + armour etc)
-// need to sort shield modulator
+
 // Need save/load function

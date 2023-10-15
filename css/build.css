@@ -186,6 +186,7 @@ td{
 #section-warning-text{
     color: red;
     font-weight: 700;
+    margin-bottom: 5px;
 }
 
 #misc-frame table{
