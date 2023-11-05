@@ -343,20 +343,20 @@ function addSection(location){
     refreshFrame();
 
     // Assigning listener to dropdown selection
-    document.getElementById(location + number + "section-name-dd").addEventListener("change", updateCard, false);
-
-    // Update ship totals
-    shipUpdate()
+    document.getElementById(location + number + "section-name-dd").addEventListener("change", findCard, false);
 }
 
 // Finds the location and number of the section clicked then runs updates the card
-function updateCard(e){
+function findCard(e){
     let number = e.currentTarget.id.replace(/\D/g,"");
     let location =  e.currentTarget.id.replace("section-name-dd","");
     location = location.replace(number,"");
     number = parseInt(number, 10);
+    updateCard(location, number);
+}
 
-    let sectionSelection = document.getElementById(e.currentTarget.id).value;
+function updateCard(location, number){
+    let sectionSelection = document.getElementById(location + number + "section-name-dd").value;
 
     document.getElementById(location + number + "section-tier-text").innerHTML = sections[sectionSelection]["tier"];
     
@@ -608,7 +608,7 @@ function removeSection(location, number){
     else{       
         // Removing section elements        
         let element = document.getElementById(location + number + "section");
-        element.innerHTML = '';
+        element.innerHTML = "";
         element.remove();
         // Lowering section count number
         document.getElementById(location + "-sections-number").innerHTML--;
@@ -648,9 +648,6 @@ function removeSection(location, number){
         coreLimits();
         refreshFrame();
     }
-
-    // Update ship totals
-    shipUpdate()
 }
 
 addSection("fore");
@@ -1057,7 +1054,7 @@ function closeView(e){
     else{
         // Removing screen-cover and all child elements
         let element = document.getElementById("screen-cover");
-        element.innerHTML = '';
+        element.innerHTML = "";
         element.remove();
     }
 }
@@ -1921,6 +1918,10 @@ document.getElementById("fore-button-minus").addEventListener("click",a=>{remove
 document.getElementById("mid-button-minus").addEventListener("click",a=>{removeSection("mid", Math.max.apply(null, midSectionsIDs))});
 document.getElementById("core-button-minus").addEventListener("click",a=>{removeSection("core", Math.max.apply(null, coreSectionsIDs))});
 document.getElementById("aft-button-minus").addEventListener("click",a=>{removeSection("aft", Math.max.apply(null, aftSectionsIDs))});
+
+// Assigning the save & load buttons
+document.getElementById("save").addEventListener("click", save, false);
+document.getElementById("load").addEventListener("click", load, false);
 
 // Section change option B: All X sections gains a Y slot in the # damage region
 function sectionChangeB(sectionLocation, sectionID){
@@ -2791,7 +2792,6 @@ function shipUpdate(){
 function shieldPatternChange(){
     currentShield = document.getElementById("shield-pattern-name-dd").value;
     shieldModulator = shieldPatterns[currentShield];
-    // let frameSelection = document.getElementById("frame-name-dd").value;
     
     // Getting shield values
     shieldAmount = (ship["ASG"] * 15) + (ship["PSG"] * 6) + ship["Shield Points"];
@@ -2810,6 +2810,222 @@ function shieldPatternChange(){
     document.getElementById("rear-shield-number").innerHTML = (shieldPerFacing * shieldModulator[3]) + shieldRemainder[remainder][5];
 }
 
+
+function save(){
+    // Checking for ship name
+    let shipName = document.getElementById("ship-name").value;
+    if(shipName == ""){
+        window.alert("Please enter a Ship Name!");
+    }
+    else{
+        // Clearing previous save
+        shipSave = {};
+
+        // Saving ship name
+        shipSave["name"] = shipName;
+
+        // Saving frame selection
+        let frameSelection = document.getElementById("frame-name-dd").value;
+        shipSave["frame"] = frameSelection;
+
+        // Saving shield pattern
+        shipSave["shield-pattern"] = currentShield;
+
+        // Saving section numbersnumber
+        shipSave["fore-sections"] = document.getElementById("fore-sections-number").innerHTML;
+        shipSave["mid-sections"] = document.getElementById("mid-sections-number").innerHTML;
+        shipSave["core-sections"] = document.getElementById("core-sections-number").innerHTML;
+        shipSave["aft-sections"] = document.getElementById("aft-sections-number").innerHTML;
+        
+        // Saving section cards and components cards
+        allSections = [foreSectionsIDs, midSectionsIDs, coreSectionsIDs, aftSectionsIDs];
+        allLocations = ["fore", "mid", "core", "aft"];
+    
+        for(let i = 0; i < allSections.length; i++){
+            let IDs = allSections[i];
+            let location = allLocations[i];
+            for(let id = 0; id < IDs.length; id++){
+                let sectionSelection = document.getElementById(location + IDs[id] + "section-name-dd").value;
+            
+                if(sectionSelection != ""){
+                    // Saving Section card name
+                    shipSave[location + (id+1) + "section-name-dd"] = sectionSelection;
+
+                    // Checking each damage regions for a component card
+                    for(let dr = 1; dr < 5; dr++){
+                        // Checking each slot for a component card
+                        for(let slot = 1; slot < 3; slot++){
+                            // If the slot could have a component card
+                            if(sections[sectionSelection]["slot_" + dr + "-" + slot + "_amount"] == "slot"){
+                                componentCard = document.getElementById(location + IDs[id] + "dr-" + dr + "-dd_slot" + slot).value;
+                                // If a component card is present saving the card name
+                                if(componentCard != ""){
+                                    shipSave[location + (id+1) + "dr-" + dr + "-dd_slot" + slot] = componentCard;
+                                }
+                            }
+                        }
+                    }
+                    
+                    // If frame type B
+                    if(frameSelection != "" && frames[frameSelection]["code"] == "B" && location == frames[frameSelection]["var2"]){
+                        componentCard = document.getElementById(location + IDs[id] + "dr-5-dd").value;
+                        // If a component card is present saving the card name
+                        if(componentCard != ""){
+                            shipSave[location + (id+1) + "dr-5-dd"] = componentCard;
+                        }
+                    }
+                }
+            }
+            if(frameSelection != "" && frames[frameSelection]["code"] == "D" && location == frames[frameSelection]["var2"]){
+                let type = frames[frameSelection]["var1"];
+                let sectionsNeeded = frames[frameSelection]["var3"];
+                let amount = frames[frameSelection]["var4"];
+                let amountSections = parseInt(document.getElementById("fore-sections-number").innerHTML, 10) + parseInt(document.getElementById("mid-sections-number").innerHTML, 10) + parseInt(document.getElementById("core-sections-number").innerHTML, 10) + parseInt(document.getElementById("aft-sections-number").innerHTML, 10);
+                    
+                for(let j = 1; j <= Math.ceil(amountSections / sectionsNeeded); j++) {
+                    if(amount == "slot"){
+                        componentCard = document.getElementById(location + j + "bonus").value;
+                        if(componentCard != ""){
+                            shipSave[location + j + "bonus"] = componentCard;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    console.log(shipSave);
+    // Need function to save to doc
+}
+
+function load(){
+    // Need function to load from doc
+    
+    // Clearing current ship
+    allSections = [foreSectionsIDs, midSectionsIDs, coreSectionsIDs, aftSectionsIDs];
+    allLocations = ["fore", "mid", "core", "aft"];
+
+    for(let i = 0; i < allSections.length; i++){
+        let IDs = allSections[i];
+        let location = allLocations[i];
+        for(let id = 0; id < IDs.length; id++){
+            // Removing section elements        
+            let element = document.getElementById(location + IDs[id] + "section");
+            element.innerHTML = "";
+            element.remove();
+        }
+    }
+
+    // Reseting ids
+    foreSectionsIDs = [];
+    midSectionsIDs = [];
+    coreSectionsIDs = [];
+    aftSectionsIDs = [];
+
+    // Reseting section numbers
+    document.getElementById("fore-sections-number").innerHTML = "0";
+    document.getElementById("mid-sections-number").innerHTML = "0";
+    document.getElementById("core-sections-number").innerHTML = "0";
+    document.getElementById("aft-sections-number").innerHTML = "0";
+
+    // Adding in sections
+    foreSections = parseInt(shipSave["fore-sections"], 10);
+    midSections = parseInt(shipSave["mid-sections"], 10);
+    coreSections = parseInt(shipSave["core-sections"], 10);
+    aftSections = parseInt(shipSave["aft-sections"], 10);
+    for(let i = 0; i < foreSections; i++){
+        addSection("fore");
+    }
+    for(let i = 0; i < midSections; i++){
+        addSection("mid");
+    }
+    for(let i = 0; i < coreSections; i++){
+        addSection("core");
+    }
+    for(let i = 0; i < aftSections; i++){
+        addSection("aft");
+    }
+                   
+    // Adding in frame and section cards
+
+    // Loading ship name
+    document.getElementById("ship-name").value = shipSave["name"];
+
+    // Loading frame selection
+    document.getElementById("frame-name-dd").value = shipSave["frame"];
+
+    // Loading shield pattern
+    currentShield = shipSave["shield-pattern"];
+
+    // Loading Sections
+    allSections = [foreSectionsIDs, midSectionsIDs, coreSectionsIDs, aftSectionsIDs];
+    allLocations = ["fore", "mid", "core", "aft"];
+
+    for(let i = 0; i < allSections.length; i++){
+        let IDs = allSections[i];
+        let location = allLocations[i];
+        for(let id = 0; id < IDs.length; id++){
+            if(shipSave[location + (id+1) + "section-name-dd"] != null){
+                document.getElementById(location + IDs[id] + "section-name-dd").value = shipSave[location + (id+1) + "section-name-dd"];
+                updateCard(location, IDs[id]);
+            }
+        }
+    }
+
+    // Refreshing values
+    refreshFrame()
+
+    // Adding in component cards and other bonus (bonus slots and shield)
+    let frameSelection = document.getElementById("frame-name-dd").value;
+
+    for(let i = 0; i < allSections.length; i++){
+        let IDs = allSections[i];
+        let location = allLocations[i];
+        for(let id = 0; id < IDs.length; id++){
+            let sectionSelection = document.getElementById(location + IDs[id] + "section-name-dd").value;
+        
+            if(sectionSelection != ""){
+                // Adding each damage regions component card
+                for(let dr = 1; dr < 5; dr++){
+                    for(let slot = 1; slot < 3; slot++){
+                        // If the slot could have a component card
+                        if(sections[sectionSelection]["slot_" + dr + "-" + slot + "_amount"] == "slot"){
+                            if(shipSave[location + (id+1) + "dr-" + dr + "-dd_slot" + slot] != null){
+                                document.getElementById(location + IDs[id] + "dr-" + dr + "-dd_slot" + slot).value = shipSave[location + (id+1) + "dr-" + dr + "-dd_slot" + slot];
+                            }
+                        }
+                    }
+                }
+                
+                // If frame type B
+                if(frameSelection != "" && frames[frameSelection]["code"] == "B" && location == frames[frameSelection]["var2"]){
+                    if(shipSave[location + (id+1) + "dr-5-dd"] != null){
+                        document.getElementById(location + IDs[id] + "dr-5-dd").value = shipSave[location + (id+1) + "dr-5-dd"];
+                    }
+                }
+            }
+        }
+        if(frameSelection != "" && frames[frameSelection]["code"] == "D" && location == frames[frameSelection]["var2"]){
+            let type = frames[frameSelection]["var1"];
+            let sectionsNeeded = frames[frameSelection]["var3"];
+            let amount = frames[frameSelection]["var4"];
+            let amountSections = parseInt(document.getElementById("fore-sections-number").innerHTML, 10) + parseInt(document.getElementById("mid-sections-number").innerHTML, 10) + parseInt(document.getElementById("core-sections-number").innerHTML, 10) + parseInt(document.getElementById("aft-sections-number").innerHTML, 10);
+                
+            for(let j = 1; j <= Math.ceil(amountSections / sectionsNeeded); j++) {
+                if(amount == "slot"){
+                    if(shipSave[location + j + "bonus"] != null){
+                        document.getElementById(location + j + "bonus").value = shipSave[location + j + "bonus"];
+                    }
+                }
+            }
+        }
+    }
+
+    // Refreshing values
+    shipUpdate()
+
+}
+
 // HERE
 
 // Need save/load function
+// Need view button for Frame style D
