@@ -379,6 +379,7 @@ td{
     grid-template-rows: auto 60% auto 10%;
     height: 350px;
     width: 48%;
+    max-width: 300px;
 }
 
 .component-pic{grid-area: component-pic;}
