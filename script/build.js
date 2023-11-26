@@ -141,8 +141,14 @@ function addSection(location){
     newDiv.setAttribute("class", "section-pic");
     newItem = document.createElement("img");
     newItem.setAttribute("class", "card-picture");
-    newItem.setAttribute("src", "images/section_logo.png");
-    newItem.setAttribute("alt", "Section");
+    if(location == "core"){
+        newItem.setAttribute("src", "images/core_logo.png");
+        newItem.setAttribute("alt", "Core Section");
+    }
+    else{
+        newItem.setAttribute("src", "images/section_logo.png");
+        newItem.setAttribute("alt", "Section");
+    }
     newDiv.appendChild(newItem);
     newSection.appendChild(newDiv);
     // Creating section name div and dropdown
@@ -1045,6 +1051,146 @@ function view5(e){
     }
 }
 
+function viewBonus(e){
+    // Gets the bonus number and section location of the view button pressed
+    let number = e.currentTarget.id.replace(/\D/g,"");
+    let location =  e.currentTarget.id.replace(number + "bonus-view","");
+    number = parseInt(number, 10)
+
+    let card = document.getElementById(location + number + "bonus").value;
+
+    // Check if dropdown has a value
+    if(card != ""){
+        // Creating component card holder
+        let componentCardDiv = ""
+        screenCover = document.createElement("div");
+        screenCover.setAttribute("id", "screen-cover");
+        componentCardDiv = document.createElement("div");
+        componentCardDiv.setAttribute("id", "component-card-holder");
+        // Adding card holder to main-grid
+        screenCover.appendChild(componentCardDiv);
+        document.querySelector('#main-grid').appendChild(screenCover);
+        // Creating event card is not clicked
+        document.getElementById("component-card-holder").addEventListener("click", closeView);
+        document.getElementById("screen-cover").addEventListener("click", closeView);
+
+        // Creating component card
+        componentCard = document.createElement("div");
+        componentCard.setAttribute("class", "component-card card");
+        // Creating component pic div and image
+        newDiv = document.createElement("div");
+        newDiv.setAttribute("class", "component-pic");
+        newItem = document.createElement("img");
+        newItem.setAttribute("class", "card-picture");
+        newItem.setAttribute("src", "images/" + components[card]["type"] + ".png");
+        newItem.setAttribute("alt", components[card]["type"]);
+        newDiv.appendChild(newItem);
+        componentCard.appendChild(newDiv);
+        // Creating component name div, paragraph and text
+        newDiv = document.createElement("div");
+        newDiv.setAttribute("class", "component-name");
+        newItem = document.createElement("p");
+        newText = document.createTextNode(card);
+        newItem.appendChild(newText);
+        newDiv.appendChild(newItem);
+        componentCard.appendChild(newDiv);
+        //  Creating tier div, paragraph and text
+        newDiv = document.createElement("div");
+        newDiv.setAttribute("class", "component-tier");
+        newItem = document.createElement("p");
+        newText = document.createTextNode(components[card]["tier"]);
+        newItem.appendChild(newText);
+        newDiv.appendChild(newItem);
+        componentCard.appendChild(newDiv);
+        // Creating card systems div, paragraph and text
+        newDiv = document.createElement("div");
+        newDiv.setAttribute("class", "component-systems");
+        // For loop for each system
+        for(let i = 1; i < 7; i++){
+            if("system_" + i != ""){
+                // Code to add systems
+                newSystemDiv = document.createElement("div");
+                newItem = document.createElement("label");
+                newItem.setAttribute("class", "system-box-label");
+                newText = document.createTextNode(components[card]["system_" + i]);
+                newItem.appendChild(newText);
+                // For loop for adding checkboxs for each system box required
+                for(let j = 0; j < components[card]["system_" + i + "_amount"]; j++){
+                    newBox = document.createElement("input");
+                    newBox.setAttribute("class", "box");
+                    newBox.setAttribute("type", "checkbox");
+                    newItem.appendChild(newBox);
+                }
+                newSystemDiv.appendChild(newItem);
+                newDiv.appendChild(newSystemDiv);
+            }
+        }
+        // Adding Misc 1 ability
+        newSystemDiv = document.createElement("div");
+        newItem = document.createElement("p");
+        newText = document.createTextNode(components[card]["misc_1"]);
+        newItem.appendChild(newText);
+        newSystemDiv.appendChild(newItem);
+        newDiv.appendChild(newSystemDiv);
+        componentCard.appendChild(newDiv); 
+
+        // Adding Bonus ability
+        if(components[card]["bonus"] != ""){
+            newSystemDiv = document.createElement("div");
+            newItem = document.createElement("p");
+            switch (components[card]["bonustype"]){
+                case "Armour":
+                    newText = document.createTextNode(components[card]["bonus"]);
+                    newItem.appendChild(newText);                       
+                    break;
+                case "Warp":
+                case "Apr":
+                    newText = document.createTextNode("+ ");
+                    newItem.appendChild(newText);
+                    for(let j = 0; j < components[card]["bonus1"]; j++){
+                        newBox = document.createElement("input");
+                        newBox.setAttribute("class", "box");
+                        newBox.setAttribute("type", "checkbox");
+                        newItem.appendChild(newBox);
+                    }
+                    newText = document.createTextNode(" " + components[card]["bonustype"] + " if in " + components[card]["bonus2"]);
+                    newItem.appendChild(newText); 
+                    break;
+            }
+            newSystemDiv.appendChild(newItem);
+            newDiv.appendChild(newSystemDiv);
+        }
+        componentCard.appendChild(newDiv);
+
+        // Creating card money div and pic
+        newDiv = document.createElement("div");
+        newDiv.setAttribute("class", "component-money");
+        newItem = document.createElement("img");
+        newItem.setAttribute("class", "card-picture");
+        newItem.setAttribute("src", "images/money_bag.png");
+        newItem.setAttribute("alt", "Cost");
+        newDiv.appendChild(newItem);
+        componentCard.appendChild(newDiv);
+        // Creating section cost div and paragraph
+        newDiv = document.createElement("div");
+        newDiv.setAttribute("class", "component-cost");
+        newItem = document.createElement("p");
+        newText = document.createTextNode(components[card]["cost"]);
+        newItem.appendChild(newText);
+        newDiv.appendChild(newItem);
+        componentCard.appendChild(newDiv);
+        //Creating section misc and paragraph
+        newDiv = document.createElement("div");
+        newDiv.setAttribute("class", "component-misc");
+        newItem = document.createElement("p");
+        newText = document.createTextNode(components[card]["misc_2"]);
+        newItem.appendChild(newText);
+        newDiv.appendChild(newItem);
+        componentCard.appendChild(newDiv);
+        componentCardDiv.appendChild(componentCard);
+    }
+}
+
 // Closing view card function
 function closeView(e){
     // Ensuring children of div do not trigger closing
@@ -1751,9 +1897,27 @@ function frameChangeD(){
                     break;
             }
             newSelectionDiv.appendChild(newSelect);
+                        
+            // Adding the view button
+            newViewDiv = document.createElement("div");
+            newViewDiv.setAttribute("class", "bonus-view-button-div");
+            newItem = document.createElement("button");
+            newItem.setAttribute("class", "small-button");
+            newItem.setAttribute("id", location + j + "bonus-view");
+            newPic = document.createElement("img");
+            newPic.setAttribute("class", "button-image");
+            newPic.setAttribute("src", "images/magnifying_glass.jpg");
+            newPic.setAttribute("alt", "View");
+            newItem.appendChild(newPic);
+            newViewDiv.appendChild(newItem);
+
             newDiv.appendChild(newParaDiv);
             newDiv.appendChild(newSelectionDiv);
+            newDiv.appendChild(newViewDiv);
             contents.appendChild(newDiv);
+
+            // Assigning the view button
+            document.getElementById(location + j + "bonus-view").addEventListener("click", viewBonus, false);
 
             // Assigning listener to dropdown selection
             document.getElementById(location + j + "bonus").addEventListener("change", shipUpdate, false);
@@ -1921,7 +2085,7 @@ document.getElementById("aft-button-minus").addEventListener("click",a=>{removeS
 
 // Assigning the save & load buttons
 document.getElementById("save").addEventListener("click", save, false);
-document.getElementById("load").addEventListener("click", load, false);
+document.getElementById("load").addEventListener("click", acquireLoad, false);
 
 // Section change option B: All X sections gains a Y slot in the # damage region
 function sectionChangeB(sectionLocation, sectionID){
@@ -2892,14 +3056,40 @@ function save(){
                 }
             }
         }
+    // Saving to txt doc
+    stringSave = JSON.stringify(shipSave)
+    var blob = new Blob([stringSave], {type: "text/plain;charset=utf-8"});
+    saveAs(blob, shipName + ".txt");
     }
-    console.log(shipSave);
-    // Need function to save to doc
 }
 
-function load(){
-    // Need function to load from doc
+function acquireLoad(){
+    // Load from txt file user selects
+    let shipLoad = {}
+    let input = document.createElement("input");
+    input.type = "file";
+
+    input.onchange = e => { 
     
+        // getting a hold of the file reference
+        let file = e.target.files[0]; 
+    
+        // setting up the reader
+        let reader = new FileReader();
+        reader.readAsText(file,'UTF-8');
+    
+        // here we tell the reader what to do when it's done reading...
+        reader.onload = readerEvent => {
+            let content = readerEvent.target.result; // this is the content!
+            shipLoad = JSON.parse(content);
+            load(shipLoad);
+        }
+    }
+    input.click();
+}
+
+function load(shipLoad){
+    shipSave = shipLoad
     // Clearing current ship
     allSections = [foreSectionsIDs, midSectionsIDs, coreSectionsIDs, aftSectionsIDs];
     allLocations = ["fore", "mid", "core", "aft"];
@@ -2956,10 +3146,13 @@ function load(){
     // Loading shield pattern
     currentShield = shipSave["shield-pattern"];
 
+    // Refreshing values
+    refreshFrame()
+
     // Loading Sections
     allSections = [foreSectionsIDs, midSectionsIDs, coreSectionsIDs, aftSectionsIDs];
     allLocations = ["fore", "mid", "core", "aft"];
-
+    
     for(let i = 0; i < allSections.length; i++){
         let IDs = allSections[i];
         let location = allLocations[i];
@@ -2970,9 +3163,6 @@ function load(){
             }
         }
     }
-
-    // Refreshing values
-    refreshFrame()
 
     // Adding in component cards and other bonus (bonus slots and shield)
     let frameSelection = document.getElementById("frame-name-dd").value;
@@ -3024,8 +3214,3 @@ function load(){
     shipUpdate()
 
 }
-
-// HERE
-
-// Need save/load function
-// Need view button for Frame style D

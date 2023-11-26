@@ -231,6 +231,10 @@ td{
     width: 80%;
 }
 
+.bonus-view-button-div{
+    width: 10%;
+}
+
 .box{
     cursor: pointer;
 }
